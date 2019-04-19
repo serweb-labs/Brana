@@ -1,0 +1,6 @@
+brana_cmf:
+    users:
+        contenttype: users
+        serializer: \Custom\Serializers\Pages
+        fields_mode: '::getAllFields'
+        create: '::create'

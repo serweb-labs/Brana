@@ -1,0 +1,34 @@
+admin:
+    renderer: twig
+    pages/list:
+        template: record.twig
+        data: 
+            contenttypes: contenttypes
+        components:
+            table:
+                type: table
+                columns: {{ contenttypes.pages }}
+    pages/{record}:
+        template: record.twig
+        data: 
+            record: fetch(/pages/%record%)
+        components:
+            title:
+                type: text
+                permissions: pages/edit
+                group: content
+                params:
+                  class: large
+                  data: {{record.title}}
+            image:
+                type: image
+                group: content
+                permissions: pages/edit
+                params:
+                  placeholder: https://source.unsplash.com/1920x640/?cityscape,landscape,nature/__random__
+                  data: {{record.image}}
+            body:
+                type: html
+                inner: {{record.content}}
+                params:
+                  height: 300px

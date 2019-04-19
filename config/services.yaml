@@ -1,0 +1,16 @@
+parameters:
+
+services:
+    _defaults:
+        autowire: true 
+        autoconfigure: true
+
+    # Main module
+    App\Main\Service\:
+        resource: '../src/Main/Service/*'
+    
+    App\Main\Controller\:
+        resource: '../src/Main/Controller/*'
+        tags: ['controller.service_arguments']
+    
+    Brana\CmfBundle\Psr\ContentTypesConfig: '@App\Main\Service\ContentTypes'

@@ -1,0 +1,7 @@
+database:
+  driver: 'orm'
+  params:
+    engine: mysql
+    db_name: 'brana'
+    db_password: 'bimeken2020'
+    db_user: 'root'

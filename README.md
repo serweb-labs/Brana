@@ -9,7 +9,7 @@ Create your API or webserservice quickly without losing flexibility.
 
 
 # Store layer API
-Los campos y sus tipos (es decir el esquema de datos) se definen cargando un archivo yaml en /config/contenttypes/, de hecho normalmente usted solo tendra que agregar su esquema en /config/contenttypes/app.yml y Brana se encargara del trabajo pesado.
+Los campos y sus tipos (es decir el esquema de datos) se definen en cualquier archivo yaml en /config/contenttypes/, de hecho normalmente usted solo tendra que agregar su esquema en /config/contenttypes/app.yml y Brana se encargara del trabajo pesado.
 
 ```yaml
 # /config/contenttypes/app.yml
@@ -75,7 +75,7 @@ Una vez que usted difinio su esquema en el archivo yaml, Brana le asignará bajo
 ## For example
 
 ```php
-// /src/App/Store.php
+// /app/Store.php
 
 $store->setEntity('page', /App/Store/Entity/PageEntity::class);
 $store->setManager('page', /App/Store/Manager/PageManager::class);
@@ -84,7 +84,7 @@ $store->setManager('page', /App/Store/Manager/PageManager::class);
 
 ## Equivalent to
 ```php
-// /src/App/Store.php
+// /app/Store.php
 
 $store->set('page', [
     'entity'=>/App/Store/Entity/PageEntity::class,
@@ -175,7 +175,7 @@ de contenido tenemos que recuperar, como cuando cargamos una consulta desde un J
 ```json
 {
   "type": "query",
-  "entity": "pages",
+  "contenttype": "pages",
   "members": [
     {
       "type": "where",
@@ -282,10 +282,11 @@ public function query($contenttype)
 {
     $arrayQuery = array (
     'type' => 'query',
-    'entity' => $contenttype,
+    'contenttype' => $contenttype,
     'members' => array (
         array (
-        'type' => 'where',
+        'type' => 'directive',
+        'directive' => 'where',
         'nexo' => 'and',
         'expr' => array (
             'rating',
@@ -462,14 +463,16 @@ public function retrieve();
 ___
 ## Serializer: ContentSerializer
 ```php
-namespace \Brana\Store\Serializers\ContentSerializer;
+namespace \Brana\Store\Serializers;
 
-public function getFields();
-public function validateData();
-public function performSerialization();
-public function isValid();
-public function create();
-public function update();
+class ContentSerializer implements BranaSerializer {
+    public function getFields(){/*...*/}
+    public function validateData(){/*...*/}
+    public function performSerialization(){/*...*/}
+    public function isValid(){/*...*/}
+    public function create(){/*...*/}
+    public function update(){/*...*/}
+}
 
 ```
 ___

@@ -1,0 +1,27 @@
+parameters:
+
+services:
+    _defaults:
+        autowire: true 
+        autoconfigure: true
+
+    Brana\CmfBundle\Store\Store:
+        public: true
+
+    Brana\CmfBundle\Store\Drivers\OrmDriver:
+        public: true
+
+    Brana\CmfBundle\Store\Drivers\Orm\StoreInteractor:
+        public: true
+
+    Brana\CmfBundle\Store\Drivers\Orm\Mapping\MetadataDriver: ~
+
+    Brana\CmfBundle\Config\:
+        resource: '../../Config/*'
+        public: true
+
+    Brana\CmfBundle\Controller\:
+        resource: '../../Controller/*'
+        tags: ['controller.service_arguments']
+        public: true
+

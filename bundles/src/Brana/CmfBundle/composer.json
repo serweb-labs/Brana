@@ -1,0 +1,22 @@
+{
+    "name" : "brana/cmf-bundle",
+    "description" : "brana cmf bundle",
+    "type" : "symfony-bundle",
+    "authors" : [{
+        "name" : "luciano rodriguez",
+        "email" : "luciano.rdz@gmail.com"
+    }],
+    "keywords" : [
+        "brana cmf"
+    ],
+    "license" : [
+        "MIT"
+    ],
+    "require" : {
+    },
+    "autoload" : {
+        "psr-0" : {
+            "Brana\\CmfBundle" : ""
+        }
+    }
+}

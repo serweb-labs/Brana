@@ -1,0 +1,10 @@
+providers:
+    selected: jwt-bearer
+    jwt-barer:
+        secret: IamASecretKeyChangeMePlease
+        lifetime: 36000
+        user_param: username
+        pass_param: password
+        request_header_name: Authorization
+        response_header_name: X-Access-Token    
+        algoritm: HS256 # HS256 or HS512 or HS384 or RS256
