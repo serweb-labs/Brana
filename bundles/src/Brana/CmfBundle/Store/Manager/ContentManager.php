@@ -12,19 +12,25 @@ use Brana\CmfBundle\Store\StoreInteractorInterface as StoreInteractor;
  */
 class ContentManager implements ManagerInterface
 {
+    public $contenttype;
+    public $entityClass;
+    protected $interactor;
+    protected $name;
+
     public function __construct(
         array $contenttype,
         string $entityClass,
-        storeInteractor $interactor
+        StoreInteractor $interactor
     ) {
         $this->contenttype = $contenttype;
         $this->entityClass = $entityClass;
         $this->interactor = $interactor;
+        $this->name = $this->getContentTypeName();
     }
 
     public function get($id)
     {
-        return $this->interactor->get($this->contenttype['name'], $id);
+        return $this->interactor->get($this->name, $id);
     }
 
     public function filter(array $criteria)
@@ -34,12 +40,12 @@ class ContentManager implements ManagerInterface
 
     public function all()
     {   
-        return $this->interactor->all($this->contenttype['name']);
+        return $this->interactor->all($this->name);
     }
 
-    public function create(array $data)
+    public function create(array $data = [])
     {
-        return new $this->entityClass($this->contenttype['name'], $data);
+        return new $this->entityClass($this->contenttype, $data);
     }
 
     public function update(BranaEntity $entity)
@@ -54,7 +60,7 @@ class ContentManager implements ManagerInterface
 
     public function save(BranaEntity $entity)
     {
-        if ($entity->getId()) {
+        if ($entity->get('id')) {
             return $this->interactor->update($entity);
         }
         return $this->interactor->create($entity);
@@ -69,4 +75,15 @@ class ContentManager implements ManagerInterface
     {
         return $this->entityClass;
     }
+
+    public function getContentType()
+    {
+        return $this->contenttype;
+    }
+
+    public function getContentTypeName()
+    {
+        return $this->contenttype['name'];
+    }
+
 }

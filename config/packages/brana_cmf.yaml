@@ -4,3 +4,6 @@ brana_cmf:
         serializer: \Custom\Serializers\Pages
         fields_mode: '::getAllFields'
         create: '::create'
+        fields:
+            id:
+                read_only: true

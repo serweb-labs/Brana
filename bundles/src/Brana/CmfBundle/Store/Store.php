@@ -74,7 +74,7 @@ class Store
     public function getManager($ct) {
         if (is_string($ct)) {
             if ($this->has($ct)) {
-                return $this->${$ct};
+                return $this->$ct;
             }
         }
         else if (is_object($ct)) {

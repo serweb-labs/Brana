@@ -36,8 +36,8 @@ class ContentSerializer // implements BranaSerializerInterface
                 'write_only' => false,
                 'match' => false,
             ];
-            if (isset($params[$ctName]['fields'][$key])) {
-                $fields[$key] = array_merge($fields[$key], $params[$ctName]['fields'][$key]);
+            if (isset($this->params[$ctName]['fields'][$key])) {
+                $fields[$key] = array_merge($fields[$key], $this->params[$ctName]['fields'][$key]);
             }
         }
         return $fields;
@@ -58,8 +58,8 @@ class ContentSerializer // implements BranaSerializerInterface
                 'write_only' => false,
                 'match' => false,
             ];
-            if (isset($params[$ctName]['fields'][$key])) {
-                $fields[$key] = array_merge($fields[$key], $params[$ctName]['fields'][$key]);
+            if (isset($this->params[$ctName]['fields'][$key])) {
+                $fields[$key] = array_merge($fields[$key], $this->params[$ctName]['fields'][$key]);
             }
         }
         return $fields;
@@ -81,7 +81,9 @@ class ContentSerializer // implements BranaSerializerInterface
     public function transform(array $data, array $fields)
     {   
         foreach ($fields as $key => $value) {
-            $data[$key] = $this->resolveAndCall($value['transform'], $data[$key]);
+            if (isset($value['transform'])) {
+                $data[$key] = $this->resolveAndCall($value['transform'], $data[$key]);
+            }
         }
         return $data;
     }
@@ -130,31 +132,36 @@ class ContentSerializer // implements BranaSerializerInterface
                     return $errors;
                 }
             }
-            if ($value['constraints']) {
+            if (isset($value['constraints'])) {
                 $constraintsErrors = $this->validateField($value['constraints'], $key, $data[$key]);
                 $errors[$key] = array_merge($errors[$key], $constraintsErrors);
                 if ($early && 0 !== count($errors[$key])) {
                     return $errors;
                 }
             }
+            if (0 === count($errors[$key])) {
+                unset($errors[$key]);
+            }
         }
         return $errors;
     }
 
 
-    public function create($request)
+    public function create()
     {
         $props = [];
         $fields = $this->getAllFields();
         $fields = $this->setFields($fields);
         $values = $this->getValuesByRequest();
-        $errors = $this->validator($rawProps, $fields, false); // early from yaml
+        $errors = $this->validator($values, $fields, false); // early from yaml
         $data = null;
         if (0 === count($errors)) {
             $values = $this->setValues($values);
             $values = $this->transform($values, $fields);
             foreach ($fields as $key => $value) {
-                $props[$key] = $value['serializer']::toInternal($rawProps[$key]);
+                if (isset($values[$key])) {
+                    $props[$key] = $value['serializer']::toInternal($values[$key]);
+                }
             }
             $instance = $this->manager->create($props);
             $this->manager->save($instance);
@@ -167,7 +174,6 @@ class ContentSerializer // implements BranaSerializerInterface
 
     public function update($instance)
     {
-        $props = [];
         $fields = $this->getAllFields(); // yaml configurable
         $fields = $this->setFields($fields);
         $values = $this->getValuesByRequest();
@@ -177,11 +183,16 @@ class ContentSerializer // implements BranaSerializerInterface
             $values = $this->setValues($values);
             $values = $this->transform($values, $fields);
             foreach ($fields as $key => $value) {
-                $props[$key] = $value['serializer']::toInternal($values[$key]);
+                if ($value['read_only']) {
+                    continue;
+                }
+                if (isset($values[$key])) {
+                    $res = $value['serializer']::toInternal($values[$key]);
+                    $instance->set($key, $res);
+                }
             }
-            $this->manager->set($instance, $props);
             $this->manager->save($instance);
-            $data = $this->manager->refresh($instance);
+            $data = $this->retrieve($instance);
         }
 
         return ['data' => $data, 'errors' => $errors];
@@ -194,7 +205,7 @@ class ContentSerializer // implements BranaSerializerInterface
         $errors = [];
         $fields = $this->getAllFields();
         foreach ($fields as $key => $value) {
-            $data[$key] = $value['serializer']::toRepresentation($instance->getValue($key));
+            $data[$key] = $value['serializer']::toRepresentation($instance->get($key));
         }
         return ['data' => $data, 'errors' => $errors];
     }
@@ -223,10 +234,10 @@ class ContentSerializer // implements BranaSerializerInterface
         throw \Exception('Not resolved');
     }
 
-
+    // handle error from bad json
     public function getValuesByRequest() : array
-    {
-        return $this->request->getContent();
+    {   
+        return json_decode($this->request->getContent(), true);
     }
 
 

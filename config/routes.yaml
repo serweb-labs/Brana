@@ -7,11 +7,17 @@ index:
 retrieve:
   path: /api/{contenttype}/{slug}
   controller: App\Main\Controller\DefaultController::retrieve
+  methods:  [GET]
 
 create:
   path: /api/{contenttype}
   controller: App\Main\Controller\DefaultController::create
   methods:  [POST]
+
+update:
+  path: /api/{contenttype}/{slug}
+  controller: App\Main\Controller\DefaultController::update
+  methods:  [PUT]
 
 # rest api
 # rest-index:

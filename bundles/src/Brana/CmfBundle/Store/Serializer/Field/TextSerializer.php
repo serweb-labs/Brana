@@ -7,7 +7,7 @@ class TextSerializer // implements BranaSerializerInterface
 
     public static function toRepresentation($value)
     {
-        return $value . "--";
+        return $value;
     }
 
 

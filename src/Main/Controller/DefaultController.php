@@ -46,25 +46,65 @@ class DefaultController extends AbstractController
                 ]
             );
             $item = $this->store->{$contenttype}->get($slug);
-            $data = $serializer->retrieve($item);
             if (!isset($item)) {
                 throw new \Exception("Not Found", $slug);
             }
+            $data = $serializer->retrieve($item);
             return new JsonResponse($data);
         }
     }
 
     public function create($contenttype, Request $request)
     {   
-        $data =  $this->getData($request);
-        \dump($data); exit;
         if ($this->store->has($contenttype)) {
-            $obj = $this->store->{$contenttype}->create($data);
-            if (!isset($obj)) {
-                throw new \Exception("Not Found", 1);
+            $params = $this->getParameter('content_serializer_config');
+            $serializer = new \Brana\CmfBundle\Store\Serializer\ContentSerializer(
+                $this->store->{$contenttype},
+                [
+                    'request' => $request,
+                    'params' => $params
+                ]
+            );
+            $data = $serializer->create();
+            if (0 !== count($data['errors'])) {
+                throw new \Exception("Internal Error", 1);
             }
-            return new JsonResponse($obj);
+            return new JsonResponse($data['data']);
         }
+    }
+
+    public function update($contenttype, $slug, Request $request)
+    {   
+        $instance = $this->getInstance();
+        if ($this->store->has($contenttype)) {
+            $params = $this->getParameter('content_serializer_config');
+            $serializer = new \Brana\CmfBundle\Store\Serializer\ContentSerializer(
+                $this->store->{$contenttype},
+                [
+                    'request' => $request,
+                    'params' => $params
+                ]
+            );
+            $data = $serializer->update($instance);
+            if (0 !== count($data['errors'])) {
+                throw new \Exception("Internal Error", 1);
+            }
+            return new JsonResponse($data['data']);
+        }
+    }
+
+    public function getInstance() {
+        $request = $this->container->get('request_stack')->getCurrentRequest();
+        $contenttype = $request->get('contenttype');
+        $id = $request->get('slug');
+        if ($this->store->has($contenttype)) {
+            return $this->store->{$contenttype}->get($id);
+        }
+        throw new \Exception("Internal Error");
+    }
+
+    public function getQuerySet() {
+        
     }
 
     private function getData($request)
