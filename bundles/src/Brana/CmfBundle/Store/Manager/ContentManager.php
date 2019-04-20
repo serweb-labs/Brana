@@ -8,21 +8,23 @@ use Brana\CmfBundle\Store\StoreInteractorInterface as StoreInteractor;
 
 /**
  * Manager
- *
+ * 
+ * Default generic manager for all content types
+ * @author Luciano Rodriguez <luciano.rdz@gmail.com>
  */
 class ContentManager implements ManagerInterface
 {
-    public $contenttype;
+    public $contentType;
     public $entityClass;
     protected $interactor;
     protected $name;
 
     public function __construct(
-        array $contenttype,
+        array $contentType,
         string $entityClass,
         StoreInteractor $interactor
     ) {
-        $this->contenttype = $contenttype;
+        $this->contentType = $contentType;
         $this->entityClass = $entityClass;
         $this->interactor = $interactor;
         $this->name = $this->getContentTypeName();
@@ -39,51 +41,55 @@ class ContentManager implements ManagerInterface
     }
 
     public function all()
-    {   
+    {
         return $this->interactor->all($this->name);
     }
 
     public function create(array $data = [])
     {
-        return new $this->entityClass($this->contenttype, $data);
+        return new $this->entityClass($this->contentType, $data);
     }
 
-    public function update(BranaEntity $entity)
+    public function update(BranaEntity $instance)
     {
-        return $this->interactor->update($entity);
+        return $this->interactor->update($instance);
     }
 
-    public function patch(BranaEntity $entity)
+    public function patch(BranaEntity $instance)
     {
-        return $this->interactor->patch($entity);
+        return $this->interactor->patch($instance);
     }
 
-    public function save(BranaEntity $entity)
+    public function save(BranaEntity $instance)
     {
-        if ($entity->get('id')) {
-            return $this->interactor->update($entity);
+        if ($instance->get('id')) {
+            return $this->interactor->update($instance);
         }
-        return $this->interactor->create($entity);
+        return $this->interactor->create($instance);
     }
 
-    public function refresh(BranaEntity $entity)
+    public function refresh(BranaEntity $instance)
     {
-        return $this->interactor->refresh($entity);
+        return $this->interactor->refresh($instance);
     }
 
-    public function getEntity()
+    public function remove(BranaEntity $instance)
+    {
+        return $this->interactor->remove($instance);
+    }
+
+    public function getEntityClass()
     {
         return $this->entityClass;
     }
 
     public function getContentType()
     {
-        return $this->contenttype;
+        return $this->contentType;
     }
 
     public function getContentTypeName()
     {
-        return $this->contenttype['name'];
+        return $this->contentType['name'];
     }
-
 }

@@ -1,47 +1,30 @@
 # index
-index:
+rest_index:
   path: /api/{contenttype}
   controller: App\Main\Controller\DefaultController::index
   methods:  [GET]
 
-retrieve:
+rest_retrieve:
   path: /api/{contenttype}/{slug}
   controller: App\Main\Controller\DefaultController::retrieve
   methods:  [GET]
 
-create:
+rest_create:
   path: /api/{contenttype}
   controller: App\Main\Controller\DefaultController::create
   methods:  [POST]
 
-update:
+rest_update:
   path: /api/{contenttype}/{slug}
   controller: App\Main\Controller\DefaultController::update
   methods:  [PUT]
 
-# rest api
-# rest-index:
-#    path: /api/{contenttype}
-#    controller: App\Controller\Rest::index
+rest_partial_update:
+  path: /api/{contenttype}/{slug}
+  controller: App\Main\Controller\DefaultController::partialUpdate
+  methods:  [PATCH]
 
-# rest-retrieve:
-#    path: /api/{contenttype}/{slug}
-#    controller: App\Controller\Rest::retrieve
-
-# rest-delete:
-#    path: /api/{contenttype}/{slug}
-#    controller: App\Controller\Rest::delete
-
-# rest-update:
-#    path: /api/{contenttype}/{slug}
-#    controller: App\Controller\Rest::update
-
-# # app builder
-# app-builder:
-#    path: /views/{contenttype}/{action}
-#    controller: App\Controller\DefaultController::index
-
-# # web dashboard
-# dashboard:
-#    path: /dashboard/{contenttype}/{action}
-#    controller: App\Controller\DefaultController::index
+rest_destroy:
+  path: /api/{contenttype}/{slug}
+  controller: App\Main\Controller\DefaultController::destroy
+  methods:  [DELETE]

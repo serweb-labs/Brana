@@ -11,23 +11,24 @@ use Brana\CmfBundle\Store\Drivers\OrmDriver;
 /* execute all queries */
 class StoreInteractor implements StoreInteractorInterface
 {
-    private $contenttypes;
+    private $contentTypes;
     private $driver;
 
     public function __construct(
-        ContentTypesConfig $contenttypes,
+        ContentTypesConfig $contentTypes,
         OrmDriver $driver
     ) {
-        $this->contenttypes = $contenttypes->get();
+        $this->contentTypes = $contentTypes->get();
         $this->driver = $driver;
     }
+
 
     public function executeBranaQuery(Query $qs)
     {
         $query = $qs->toArray();
         $qb = $this->dbalQuery();
         $contentType = $query['contenttype'];
-        $contentType = $this->contenttypes[$contentType];
+        $contentType = $this->contentTypes[$contentType];
         $fields = array_keys($contentType['fields']);
         $qb->select($fields)
         ->from($contentType);
@@ -46,6 +47,7 @@ class StoreInteractor implements StoreInteractorInterface
         return $all;
     }
 
+
     private function parseBranaQueryMember($qp, $member)
     {
         switch ($member->type) {
@@ -60,16 +62,18 @@ class StoreInteractor implements StoreInteractorInterface
         }
     }
 
+
     private function runQueryDirective($qb, $directive)
     {
         'Brana\CmfBundle\Store\Query\\'. $directive::parse($qp);
     }
 
-    // TODO: centralize instance factory maybe in store
+
     private function getManager($contentType)
     {
         return$this->driver->store->getManager($contentType);
     }
+
 
     private function dbalQuery()
     {
@@ -88,7 +92,7 @@ class StoreInteractor implements StoreInteractorInterface
         $pkCol = $pkField['columnName'];
 
         // columns
-        $cols = array_map(function($value){
+        $cols = array_map(function ($value) {
             return $value['columnName'];
         }, $metadataFields);
 
@@ -106,7 +110,8 @@ class StoreInteractor implements StoreInteractorInterface
         }
         return null;
     }
-    
+
+
     // TODO: avoid select *
     public function all(string $contentType)
     {
@@ -115,7 +120,7 @@ class StoreInteractor implements StoreInteractorInterface
         $metadataFields = $metadata->getFieldMappings();
 
         // columns
-        $cols = array_map(function($value){
+        $cols = array_map(function ($value) {
             return $value['columnName'];
         }, $metadataFields);
 
@@ -135,17 +140,19 @@ class StoreInteractor implements StoreInteractorInterface
         return $all;
     }
 
+
     public function filter(Query $qs)
     {
         return executeBranaQuery($qs);
     }
+
 
     public function create(BranaEntity $instance)
     {
         $data = $this->dehydrate($instance);
         $contentType = $instance->getContentTypeName();
         $metadata = $this->driver->metadata[$contentType];
-        $schema = $this->contenttypes[$contentType];
+        $schema = $this->contentTypes[$contentType];
         $cols = [];
         $params = [];
         $count = 0;
@@ -171,13 +178,12 @@ class StoreInteractor implements StoreInteractorInterface
         }
         $result = $qb->execute();
 
-        // TODO: need support for 
+        // TODO: need support for
         // non auto-increment PKs
         // for ex. uuid
         if ($result === 1) {
             $instance->set($metadata->getPk()['fieldName'], $this->driver->getConnection()->lastInsertId());
-        }
-        else {
+        } else {
             throw new \Exception("driver error");
         }
     }
@@ -188,7 +194,7 @@ class StoreInteractor implements StoreInteractorInterface
         $data = $this->dehydrate($instance);
         $contentType = $instance->getContentTypeName();
         $metadata = $this->driver->metadata[$contentType];
-        $schema = $this->contenttypes[$contentType];
+        $schema = $this->contentTypes[$contentType];
         $cols = [];
         $params = [];
         $count = 0;
@@ -221,11 +227,41 @@ class StoreInteractor implements StoreInteractorInterface
         }
     }
 
+
+
+    // TODO: handle no modified result
+    public function remove(BranaEntity $instance)
+    {
+        $data = $this->dehydrate($instance);
+        $contentType = $instance->getContentTypeName();
+        $metadata = $this->driver->metadata[$contentType];
+        $schema = $this->contentTypes[$contentType];
+        $cols = [];
+        $params = [];
+        $count = 0;
+        $pkField = $metadata->getPk()['fieldName'];
+    
+        $qb = $this->dbalQuery()
+        ->delete($contentType)
+        ->where($pkField . " = :pk")
+        ->setParameter(":pk", $instance->get($pkField));
+
+        $result = $qb->execute();
+
+        if ($result !== 1) {
+            throw new \Exception("driver error");
+        }
+        
+        return true;
+    }
+
+
     public function refresh(BranaEntity $instance)
     {
         $this->get($instance, $instance->getPk());
         return $instance;
     }
+
 
     public function dehydrate(BranaEntity $instance)
     {
@@ -243,6 +279,7 @@ class StoreInteractor implements StoreInteractorInterface
         return $values;
     }
 
+
     public function hydrate(BranaEntity $instance, array $raw)
     {
         $contentType = $instance->getContentTypeName();
@@ -255,12 +292,10 @@ class StoreInteractor implements StoreInteractorInterface
                 $setter = 'set' . ucwords($branaName);
                 if (method_exists($instance, $setter)) {
                     $instance->$setter($data);
-                }
-                else {
+                } else {
                     try {
                         $instance->$branaName = $data;
-                    }
-                    catch (Exception $e) {
+                    } catch (Exception $e) {
                         throw $e;
                     }
                 }

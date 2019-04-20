@@ -26,8 +26,8 @@ class ContentSerializer // implements BranaSerializerInterface
     public function getAllFields()
     {
         $fields = [];
-        $ctName = $this->manager->contenttype['name'];
-        foreach ($this->manager->contenttype['fields'] as $key => $value) {
+        $ctName = $this->manager->getContentTypeName();
+        foreach ($this->manager->getContentType()['fields'] as $key => $value) {
             $fieldSerializer = $this->fieldMapping[$value['type']];
             $fields[$key] = [
                 'serializer' => $fieldSerializer,
@@ -47,9 +47,9 @@ class ContentSerializer // implements BranaSerializerInterface
     public function getFields($keys)
     {
         $fields = [];
-        $ctName = $this->manager->contenttype['name'];
+        $ctName = $this->getContentTypeName();
         foreach ($keys as $ct) {
-            $type = $this->manager->contenttype['fields'][$ct]['type'];
+            $type = $this->manager->getContentType()['fields'][$ct]['type'];
             $fieldSerializer = $this->fieldMapping[$type];
             $fields[$key] = [
                 'serializer' => $fieldSerializer,

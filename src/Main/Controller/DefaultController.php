@@ -75,11 +75,12 @@ class DefaultController extends AbstractController
 
     public function update($contenttype, $slug, Request $request)
     {   
-        $instance = $this->getInstance();
         if ($this->store->has($contenttype)) {
+            $manager = $this->store->$contenttype;
+            $instance =  $manager->create(['id'=>(integer) $slug]);
             $params = $this->getParameter('content_serializer_config');
             $serializer = new \Brana\CmfBundle\Store\Serializer\ContentSerializer(
-                $this->store->{$contenttype},
+                $manager,
                 [
                     'request' => $request,
                     'params' => $params
@@ -92,6 +93,40 @@ class DefaultController extends AbstractController
             return new JsonResponse($data['data']);
         }
     }
+
+
+    public function partialUpdate($contenttype, $slug, Request $request)
+    {   
+        $instance = $this->getInstance();
+        if ($this->store->has($contenttype)) {
+            $manager = $this->store->$contenttype;
+            $params = $this->getParameter('content_serializer_config');
+            $serializer = new \Brana\CmfBundle\Store\Serializer\ContentSerializer(
+                $manager,
+                [
+                    'request' => $request,
+                    'params' => $params
+                ]
+            );
+            $data = $serializer->update($instance);
+            if (0 !== count($data['errors'])) {
+                throw new \Exception("Internal Error", 1);
+            }
+            return new JsonResponse($data['data']);
+        }
+    }
+
+
+    public function destroy($contenttype, $slug, Request $request)
+    {   
+        $instance = $this->getInstance();
+        if ($this->store->has($contenttype)) {
+            $manager = $this->store->$contenttype;
+            $result = $manager->remove($instance) ? ['success'=> true] : ['success'=> false]; 
+            return new JsonResponse($result);
+        }
+    }
+
 
     public function getInstance() {
         $request = $this->container->get('request_stack')->getCurrentRequest();

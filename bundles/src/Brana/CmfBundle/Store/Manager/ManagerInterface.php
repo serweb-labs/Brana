@@ -26,5 +26,5 @@ interface ManagerInterface
 
     function refresh(BranaEntity $entity);
 
-    function getEntity();
+    function getEntityClass();
 }
