@@ -30,7 +30,7 @@ class DateField implements BranaFieldInterface
     public function hydrate($value)
     {
         $datetime = new \DateTime();
-        return $datetime->createFromFormat('Y-d-m', $value);
+        return $datetime->createFromFormat('Y-m-d', $value);
     }
 
 

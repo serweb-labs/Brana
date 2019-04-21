@@ -1,30 +1,30 @@
 # index
 rest_index:
   path: /api/{contenttype}
-  controller: App\Main\Controller\DefaultController::index
+  controller: App\Main\Controller\RestContentController::index
   methods:  [GET]
 
 rest_retrieve:
   path: /api/{contenttype}/{slug}
-  controller: App\Main\Controller\DefaultController::retrieve
+  controller: App\Main\Controller\RestContentController::retrieve
   methods:  [GET]
 
 rest_create:
   path: /api/{contenttype}
-  controller: App\Main\Controller\DefaultController::create
+  controller: App\Main\Controller\RestContentController::create
   methods:  [POST]
 
 rest_update:
   path: /api/{contenttype}/{slug}
-  controller: App\Main\Controller\DefaultController::update
+  controller: App\Main\Controller\RestContentController::update
   methods:  [PUT]
 
 rest_partial_update:
   path: /api/{contenttype}/{slug}
-  controller: App\Main\Controller\DefaultController::partialUpdate
+  controller: App\Main\Controller\RestContentController::partialUpdate
   methods:  [PATCH]
 
 rest_destroy:
   path: /api/{contenttype}/{slug}
-  controller: App\Main\Controller\DefaultController::destroy
+  controller: App\Main\Controller\RestContentController::destroy
   methods:  [DELETE]

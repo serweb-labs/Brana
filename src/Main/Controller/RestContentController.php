@@ -8,18 +8,22 @@ use Brana\CmfBundle\Store\Store;
 use App\Main\Service\Brana;
 use Symfony\Component\HttpFoundation\Request;
 
-class DefaultController extends AbstractController
-{   
+class RestContentController extends AbstractController
+{
+
     public function __construct(Brana $brana)
     {
         $this->store = $brana->store;
+        $this->defaultSerializerClass = \Brana\CmfBundle\Store\Serializer\ContentSerializer::class;
     }
+
 
     public function index($contenttype, Request $request)
     {   
         if ($this->store->has($contenttype)) {
-            $params = $this->getParameter('content_serializer_config');
-            $serializer = new \Brana\CmfBundle\Store\Serializer\ContentSerializer(
+            $params = $this->getParameter('content_serializer_config')['rest'];
+            $serializerClass = $params[$contenttype]['serializer'] ?? $this->defaultSerializerClass;
+            $serializer = new $serializerClass(
                 $this->store->{$contenttype},
                 [
                     'request' => $request,
@@ -34,10 +38,11 @@ class DefaultController extends AbstractController
         return new JsonResponse(array('data' => $objs));
     }
 
+
     public function retrieve($contenttype, $slug, Request $request)
     {   
         if ($this->store->has($contenttype)) {
-            $params = $this->getParameter('content_serializer_config');
+            $params = $this->getParameter('content_serializer_config')['rest'];
             $serializer = new \Brana\CmfBundle\Store\Serializer\ContentSerializer(
                 $this->store->{$contenttype},
                 [
@@ -54,10 +59,11 @@ class DefaultController extends AbstractController
         }
     }
 
+
     public function create($contenttype, Request $request)
     {   
         if ($this->store->has($contenttype)) {
-            $params = $this->getParameter('content_serializer_config');
+            $params = $this->getParameter('content_serializer_config')['rest'];
             $serializer = new \Brana\CmfBundle\Store\Serializer\ContentSerializer(
                 $this->store->{$contenttype},
                 [
@@ -73,13 +79,15 @@ class DefaultController extends AbstractController
         }
     }
 
+
     public function update($contenttype, $slug, Request $request)
     {   
         if ($this->store->has($contenttype)) {
             $manager = $this->store->$contenttype;
             $instance =  $manager->create(['id'=>(integer) $slug]);
-            $params = $this->getParameter('content_serializer_config');
-            $serializer = new \Brana\CmfBundle\Store\Serializer\ContentSerializer(
+            $params = $this->getParameter('content_serializer_config')['rest'];
+            $serializerClass = $params[$contenttype]['serializer'] ?? '\Brana\CmfBundle\Store\Serializer\ContentSerializer';
+            $serializer = new $serializerClass(
                 $manager,
                 [
                     'request' => $request,
@@ -95,12 +103,13 @@ class DefaultController extends AbstractController
     }
 
 
+
     public function partialUpdate($contenttype, $slug, Request $request)
     {   
         $instance = $this->getInstance();
         if ($this->store->has($contenttype)) {
             $manager = $this->store->$contenttype;
-            $params = $this->getParameter('content_serializer_config');
+            $params = $this->getParameter('content_serializer_config')['rest'];
             $serializer = new \Brana\CmfBundle\Store\Serializer\ContentSerializer(
                 $manager,
                 [

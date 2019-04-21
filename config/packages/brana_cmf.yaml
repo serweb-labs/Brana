@@ -1,11 +1,13 @@
 brana_cmf:
-    users:
-        contenttype: users
-        serializer: \Custom\Serializers\Pages
-        fields_mode: '::getAllFields'
-        create: '::create'
-        fields:
-            id:
-                read_only: true
-            from_date:
-                format: 'd-m-Y'
+    rest:
+        users:
+            contenttype: users
+            serializer: Brana\CmfBundle\Store\Serializer\UserSerializer
+            fields_keys: all
+            fields:
+                id:
+                    read_only: true
+                from_date:
+                    format: d/m/Y
+                password:
+                    serializer: Brana\CmfBundle\Store\Serializer\Field\ObscureSerializer

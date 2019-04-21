@@ -49,9 +49,9 @@ class ContentSerializer // implements BranaSerializerInterface
     public function getFields($keys)
     {
         $fields = [];
-        $ctName = $this->getContentTypeName();
-        foreach ($keys as $ct) {
-            $type = $this->manager->getContentType()['fields'][$ct]['type'];
+        $ctName = $this->manager->getContentTypeName();
+        foreach ($keys as $key) {
+            $type = $this->manager->getContentType()['fields'][$key]['type'];
             $fieldSerializer = $this->fieldMapping[$type];
             $fields[$key] = [
                 'serializer' => $fieldSerializer,
@@ -67,6 +67,22 @@ class ContentSerializer // implements BranaSerializerInterface
         return $fields;
     }
 
+    public function getFieldsKeys() {
+        $ctName = $this->manager->getContentTypeName();
+        $fKeys = $this->params[$ctName]['fields_keys'] ?? null;
+        if (is_array($fKeys)) {
+            return $fKeys;
+        }
+        else if ($fKeys === null) {
+            return array_keys($this->params[$ctName]['fields']);
+        }
+        else if ($fKeys === 'all') {
+            return array_keys($this->manager->getContentType()['fields']);
+        }
+        else if (is_string($fKeys) && strpos($fKeys, '::') !== false) {
+            return $this->resolveAndCall($fKeys);
+        };
+    }
 
     public function setFields($fields)
     {
@@ -84,7 +100,7 @@ class ContentSerializer // implements BranaSerializerInterface
     {   
         foreach ($fields as $key => $value) {
             if (isset($value['transform'])) {
-                $data[$key] = $this->resolveAndCall($value['transform'], $data[$key]);
+                $data[$key] = $this->resolveAndCall($value['transform'], ...$data[$key]);
             }
         }
         return $data;
@@ -152,7 +168,8 @@ class ContentSerializer // implements BranaSerializerInterface
     public function create()
     {
         $props = [];
-        $fields = $this->getAllFields();
+        $fieldKeys = $this->getFieldsKeys();
+        $fields = $this->getFields($fieldKeys);
         $fields = $this->setFields($fields);
         $values = $this->getValuesByRequest();
         $errors = $this->validator($values, $fields, false); // early from yaml
@@ -176,7 +193,8 @@ class ContentSerializer // implements BranaSerializerInterface
 
     public function update($instance)
     {
-        $fields = $this->getAllFields(); // yaml configurable
+        $fieldKeys = $this->getFieldsKeys();
+        $fields = $this->getFields($fieldKeys);
         $fields = $this->setFields($fields);
         $values = $this->getValuesByRequest();
         $errors = $this->validator($values, $fields, false); // early from yaml
@@ -205,14 +223,16 @@ class ContentSerializer // implements BranaSerializerInterface
     {
         $data = [];
         $errors = [];
-        $fields = $this->getAllFields();
+        $fieldKeys = $this->getFieldsKeys();
+        $fields = $this->getFields($fieldKeys);
+        $fields = $this->setFields($fields);
         foreach ($fields as $key => $value) {
             $data[$key] = $value['serializer']::toRepresentation($instance->get($key), $value);
         }
         return ['data' => $data, 'errors' => $errors];
     }
 
-    public function resolveAndCall($value, $args)
+    public function resolveAndCall($value, ...$args)
     {
         if (is_callable($value)) {
             return call_user_func($value, $args);
@@ -221,16 +241,16 @@ class ContentSerializer // implements BranaSerializerInterface
             $parts = explode("::", $value);
 
             // only method
-            if (count($parts) === 1 && strpos($value, "::") === 0) {
+            if (strpos($value, "::") === 0) {
                 $class = $this;
-                $method = $parts[0];
+                $method = $parts[1];
             }
             // class and method
-            else if (count($parts) === 2) {
+            else if (isset($parts[0]) && isset($parts[1])) {
                 $class = $parts[0];
                 $method = $parts[1];
             }
-            return call_user_func([$class, $method], $args);
+            return call_user_func([$class, $method], ...$args);
         }
         
         throw \Exception('Not resolved');
