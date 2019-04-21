@@ -48,6 +48,9 @@ class MetadataDriver
             'text' => 'Brana\CmfBundle\Store\Drivers\Orm\Field\TextField',
             'integer' => 'Brana\CmfBundle\Store\Drivers\Orm\Field\IntegerField',
             'slug' => 'Brana\CmfBundle\Store\Drivers\Orm\Field\SlugField',
+            'date' => 'Brana\CmfBundle\Store\Drivers\Orm\Field\DateField',
+            'boolean' => 'Brana\CmfBundle\Store\Drivers\Orm\Field\BooleanField',
+            'choice' => 'Brana\CmfBundle\Store\Drivers\Orm\Field\ChoiceField'
         ];
         return new $map[$fieldDef['type']]($fieldDef, $kField);
     }

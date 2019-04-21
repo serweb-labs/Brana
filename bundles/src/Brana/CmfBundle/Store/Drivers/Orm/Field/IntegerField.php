@@ -111,13 +111,13 @@ class IntegerField implements BranaFieldInterface
         return [];
     }
 
-    public function hydrate($data)
+    public function hydrate($value)
     {
-        return $data;
+        return (integer) $value;
     }
 
-    public function dehydrate($data)
+    public function dehydrate($value)
     {
-        return $data;
+        return (integer) $value;
     }
 }

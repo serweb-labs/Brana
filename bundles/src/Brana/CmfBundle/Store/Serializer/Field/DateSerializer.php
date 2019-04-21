@@ -5,15 +5,30 @@ namespace Brana\CmfBundle\Store\Serializer\Field;
 class DateSerializer // implements BranaSerializerInterface
 {
 
-    public static function toRepresentation($value)
+    public static function getOptions($options)
     {
-        return date("m-d-Y", strtotime($value));
+        $default = [
+            'format' => 'm/d/Y'
+        ];
+        return array_merge($default, $options);
     }
 
 
-    public static function toInternal($value)
-    {
-        return date("Y-m-d", strtotime($value));
+    public static function toRepresentation($value, array $options = [])
+    {   
+        $options = self::getOptions($options);
+        if (isset($value)) {
+            return $value->format($options['format']);
+        }
+        return null;
+    }
+
+
+    public static function toInternal($value, array $options = [])
+    {   
+        $options = self::getOptions($options);
+        $datetime = new \DateTime();
+        return $datetime->createFromFormat($options['format'], $value);
     }
 
 }

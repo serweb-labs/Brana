@@ -19,6 +19,8 @@ class ContentSerializer // implements BranaSerializerInterface
             'text' => Field\TextSerializer::class,
             'date' => Field\DateSerializer::class,
             'slug' => Field\TextSerializer::class,
+            'boolean' => Field\TextSerializer::class,
+            'choice' => Field\ChoiceSerializer::class,
         ];
     }
 
@@ -187,7 +189,7 @@ class ContentSerializer // implements BranaSerializerInterface
                     continue;
                 }
                 if (isset($values[$key])) {
-                    $res = $value['serializer']::toInternal($values[$key]);
+                    $res = $value['serializer']::toInternal($values[$key], $value);
                     $instance->set($key, $res);
                 }
             }
@@ -205,7 +207,7 @@ class ContentSerializer // implements BranaSerializerInterface
         $errors = [];
         $fields = $this->getAllFields();
         foreach ($fields as $key => $value) {
-            $data[$key] = $value['serializer']::toRepresentation($instance->get($key));
+            $data[$key] = $value['serializer']::toRepresentation($instance->get($key), $value);
         }
         return ['data' => $data, 'errors' => $errors];
     }

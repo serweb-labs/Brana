@@ -7,3 +7,5 @@ brana_cmf:
         fields:
             id:
                 read_only: true
+            from_date:
+                format: 'd-m-Y'

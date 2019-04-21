@@ -5,9 +5,11 @@ namespace Brana\CmfBundle\Store\Drivers\Orm\Field;
 /**
  * @author Luciano Rodriguez <luciano.rdz@gmail.com>
  */
-class SlugField implements BranaFieldInterface
+class DateField implements BranaFieldInterface
 {
-
+    /**
+     * {@inheritdoc}
+     */
     public function __construct(array $config, $name)
     {
         $this->config = $config;
@@ -19,15 +21,16 @@ class SlugField implements BranaFieldInterface
      */
     public function getName()
     {
-        return 'slug';
+        return 'date';
     }
 
     /**
      * {@inheritdoc}
      */
     public function hydrate($value)
-    {   
-        return $value;
+    {
+        $datetime = new \DateTime();
+        return $datetime->createFromFormat('Y-d-m', $value);
     }
 
 
@@ -36,7 +39,7 @@ class SlugField implements BranaFieldInterface
      */
     public function dehydrate($value)
     {
-        return $value;
+        return $value->format('Y-m-d');
     }
 
     /**
@@ -44,7 +47,7 @@ class SlugField implements BranaFieldInterface
      */
     public function getMapTypeName()
     {
-        return 'text';
+        return 'date';
     }
 
 
@@ -61,7 +64,7 @@ class SlugField implements BranaFieldInterface
      */
     public function getMapLength()
     {
-        return $config['length'] ?? 256;
+        return null;
     }
 
 

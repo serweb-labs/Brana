@@ -62,6 +62,7 @@
         }
     },
     "require-dev": {
+        "symfony/profiler-pack": "^1.0",
         "symfony/var-dumper": "4.2.*",
         "symfony/web-server-bundle": "4.2.*"
     }

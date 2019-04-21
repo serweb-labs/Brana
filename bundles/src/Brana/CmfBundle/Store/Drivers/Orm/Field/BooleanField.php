@@ -5,12 +5,16 @@ namespace Brana\CmfBundle\Store\Drivers\Orm\Field;
 /**
  * @author Luciano Rodriguez <luciano.rdz@gmail.com>
  */
-class SlugField implements BranaFieldInterface
+class BooleanField implements BranaFieldInterface
 {
 
     public function __construct(array $config, $name)
     {
-        $this->config = $config;
+        $fallback = [
+            'default' => false,
+            'nullable' => true
+        ];
+        $this->config = array_merge($fallback, $config);
         $this->config['name'] = $name;
     }
 
@@ -18,25 +22,8 @@ class SlugField implements BranaFieldInterface
      * {@inheritdoc}
      */
     public function getName()
-    {
-        return 'slug';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function hydrate($value)
     {   
-        return $value;
-    }
-
-
-    /**
-     * {@inheritdoc}
-     */
-    public function dehydrate($value)
-    {
-        return $value;
+        return 'boolean';
     }
 
     /**
@@ -44,9 +31,8 @@ class SlugField implements BranaFieldInterface
      */
     public function getMapTypeName()
     {
-        return 'text';
+        return 'boolean';
     }
-
 
     /**
      * {@inheritdoc}
@@ -61,7 +47,7 @@ class SlugField implements BranaFieldInterface
      */
     public function getMapLength()
     {
-        return $config['length'] ?? 256;
+        return null;
     }
 
 
@@ -70,7 +56,7 @@ class SlugField implements BranaFieldInterface
      */
     public function getMapIsNullable()
     {
-        return $config['nullable'] ?? false;
+        return $this->config['nullable'];
     }
 
 
@@ -106,7 +92,7 @@ class SlugField implements BranaFieldInterface
      */
     public function getMapDefault()
     {
-        return $this->config['default'] ?? '';
+        return is_bool($this->config['default']) ? $this->config['default'] : false;
     }
 
 
@@ -115,7 +101,7 @@ class SlugField implements BranaFieldInterface
      */
     public function getMapIsPk()
     {
-        return $this->config['name'] === 'id';
+        return false;
     }
 
 
@@ -129,4 +115,13 @@ class SlugField implements BranaFieldInterface
         return [];
     }
 
+    public function hydrate($value)
+    {
+        return (boolean) $value;
+    }
+
+    public function dehydrate($value)
+    {
+        return (integer) $value;
+    }
 }

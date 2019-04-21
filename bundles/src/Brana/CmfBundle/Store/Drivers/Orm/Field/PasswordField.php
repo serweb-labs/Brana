@@ -5,7 +5,7 @@ namespace Brana\CmfBundle\Store\Drivers\Orm\Field;
 /**
  * @author Luciano Rodriguez <luciano.rdz@gmail.com>
  */
-class SlugField implements BranaFieldInterface
+class PasswordField implements BranaFieldInterface
 {
 
     public function __construct(array $config, $name)
@@ -19,14 +19,14 @@ class SlugField implements BranaFieldInterface
      */
     public function getName()
     {
-        return 'slug';
+        return 'password';
     }
 
     /**
      * {@inheritdoc}
      */
     public function hydrate($value)
-    {   
+    {
         return $value;
     }
 
