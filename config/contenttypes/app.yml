@@ -5,6 +5,7 @@ users:
             type: integer
         username:
             type: text
+            nullable: false
         name:
             type: text
         password:

@@ -1,13 +1,15 @@
 brana_cmf:
-    rest:
-        users:
-            contenttype: users
-            serializer: Brana\CmfBundle\Store\Serializer\UserSerializer
-            fields_keys: all
-            fields:
-                id:
-                    read_only: true
-                from_date:
-                    format: d/m/Y
-                password:
-                    serializer: Brana\CmfBundle\Store\Serializer\Field\ObscureSerializer
+  rest_content_types:
+    users:
+      content_type: users
+      serializer: Brana\CmfBundle\Store\Serializer\UserSerializer
+      fields_keys: all
+      fields:
+        id:
+          read_only: true
+        from_date:
+          format: d/m/Y
+        password:
+          serializer: Brana\CmfBundle\Store\Serializer\Field\ObscureSerializer
+        username:
+          required: true

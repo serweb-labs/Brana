@@ -24,7 +24,10 @@ class BranaCmfExtension extends Extension
         foreach ($configs as $subConfig) {
             $configMerged = array_merge($configMerged, $subConfig);
         }
-        $container->setParameter('content_serializer_config', $configMerged);
+
+        if (isset($configMerged['rest_content_types'])) {
+            $container->setParameter('brana_cmf.rest_content_types', $configMerged['rest_content_types']);
+        }
     }
 
 }
