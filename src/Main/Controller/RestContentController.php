@@ -13,6 +13,7 @@ class RestContentController extends AbstractController
     private $store;
     private $defaultSerializerClass;
 
+
     public function __construct(Brana $brana)
     {
         $this->store = $brana->store;

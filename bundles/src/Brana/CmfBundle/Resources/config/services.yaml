@@ -14,6 +14,9 @@ services:
     Brana\CmfBundle\Store\Drivers\Orm\StoreInteractor:
         public: true
 
+    Brana\CmfBundle\Store\Drivers\Orm\SchemaProvider:
+        public: true
+
     Brana\CmfBundle\Store\Drivers\Orm\Mapping\MetadataDriver: ~
 
     Brana\CmfBundle\Config\:
@@ -23,5 +26,10 @@ services:
     Brana\CmfBundle\Controller\:
         resource: '../../Controller/*'
         tags: ['controller.service_arguments']
+        public: true
+
+    Brana\CmfBundle\Command\:
+        resource: '../../Command/*'
+        tags: ['console.command']
         public: true
 

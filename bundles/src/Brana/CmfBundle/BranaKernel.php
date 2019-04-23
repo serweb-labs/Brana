@@ -8,8 +8,9 @@ use Brana\CmfBundle\Psr\ContentTypesConfig;
 use Brana\CmfBundle\Store\Store;
 use Brana\CmfBundle\Store\Entity\ContentEntity;
 use Brana\CmfBundle\Store\Manager\ContentManager;
+use Brana\CmfBundle\Psr\BranaKernel as BranaKernelInterface;
 
-abstract class BranaKernel
+abstract class BranaKernel implements BranaKernelInterface
 {
     public $store;
     public $contenttypes;
@@ -22,7 +23,7 @@ abstract class BranaKernel
         $this->boot();
     }
 
-    final private function boot()
+    public function boot()
     {
         $this->loadStore();
         $this->setStore();

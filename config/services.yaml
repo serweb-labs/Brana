@@ -14,3 +14,4 @@ services:
         tags: ['controller.service_arguments']
     
     Brana\CmfBundle\Psr\ContentTypesConfig: '@App\Main\Service\ContentTypes'
+    Brana\CmfBundle\Psr\BranaKernel: '@App\Main\Service\Brana'
