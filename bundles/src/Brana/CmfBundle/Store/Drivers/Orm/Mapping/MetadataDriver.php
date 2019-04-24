@@ -70,7 +70,7 @@ class MetadataDriver
         
         foreach ($ct['fields'] as $kField => $vField) {
             $branaField = $this->getBranaField($vField, $kField);
-            $metadata->mapField([
+            $mapField = [
                 'fieldName'        => $kField,
                 'type'             => $branaField->getMapTypeName(),
                 'length'           => $branaField->getMapLength(),
@@ -78,11 +78,15 @@ class MetadataDriver
                 'platformOptions'  => $branaField->getMapPlatformOptions(),
                 'precision'        => $branaField->getMapPrecision(),
                 'scale'            => $branaField->getMapScale(),
-                'default'          => $branaField->getMapDefault(),
                 'id'               => $branaField->getMapIsPk(),
+                'unique'           => $branaField->getMapIsPk(),
                 '_fieldtype'       => $branaField->getName(),
                 '_fieldInstance'   => $branaField,
-            ]);     
+            ];
+            if ($branaField->getMapUseDefault()) {
+                $mapField['default'] = $branaField->getMapDefault();
+            }
+            $metadata->mapField($mapField);
         }
         
         $this->metadata[$ctname] = $metadata;

@@ -1,0 +1,30 @@
+users:
+    name: users
+    fields:
+        id:
+            type: integer
+            pk: true
+        username:
+            type: text
+        name:
+            type: text
+        password:
+            type: text
+        email:
+            type: text
+        from_date:
+            type: date
+        is_admin:
+            type: boolean
+        type:
+            type: choice
+            values:
+                - name: 'staff'
+                  value: 1
+                - name: 'contact'
+                  value: 2
+        # avatar:
+        #     type: image
+        #     extensions: [ gif, jpg, png ]
+    default_status: published
+    searchable: false

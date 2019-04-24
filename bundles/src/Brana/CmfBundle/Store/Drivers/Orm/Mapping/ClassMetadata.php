@@ -143,5 +143,15 @@ class ClassMetadata extends ClassMetadataInfo implements ClassMetadataInterface
         return null;
     }
 
+    /**
+     * Checks whether the class uses an identity column for the Id generation.
+     *
+     * @return boolean TRUE if the class uses the IDENTITY generator, FALSE otherwise.
+     */
+    public function isIdGeneratorIdentity()
+    {
+        return true;
+    }
+
 
 }

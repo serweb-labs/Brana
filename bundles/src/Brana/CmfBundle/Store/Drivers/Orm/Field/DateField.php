@@ -12,7 +12,10 @@ class DateField implements BranaFieldInterface
      */
     public function __construct(array $config, $name)
     {
-        $this->config = $config;
+        $fallback = [
+            'nullable' => true
+        ];
+        $this->config = array_merge($fallback, $config);
         $this->config['name'] = $name;
     }
 
@@ -73,7 +76,7 @@ class DateField implements BranaFieldInterface
      */
     public function getMapIsNullable()
     {
-        return $config['nullable'] ?? false;
+        return $this->config['nullable'];
     }
 
 
@@ -107,9 +110,18 @@ class DateField implements BranaFieldInterface
     /**
      * {@inheritdoc}
      */
+    public function getMapUseDefault(): bool
+    {   
+      return array_key_exists('default', $this->config);
+    }
+
+
+    /**
+     * {@inheritdoc}
+     */
     public function getMapDefault()
     {
-        return $this->config['default'] ?? '';
+        return $this->config['default'];
     }
 
 

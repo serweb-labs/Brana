@@ -87,6 +87,13 @@ interface BranaFieldInterface
     public function getMapScale();
 
     /**
+     * Map use a default value
+     * 
+     * @return bool
+     */
+    public function getMapUseDefault(): bool;
+
+    /**
      * Map default value
      * 
      * @return object

@@ -11,7 +11,6 @@ class BooleanField implements BranaFieldInterface
     public function __construct(array $config, $name)
     {
         $fallback = [
-            'default' => false,
             'nullable' => true
         ];
         $this->config = array_merge($fallback, $config);
@@ -90,9 +89,18 @@ class BooleanField implements BranaFieldInterface
     /**
      * {@inheritdoc}
      */
+    public function getMapUseDefault(): bool
+    {   
+      return array_key_exists('default', $this->config);
+    }
+
+
+    /**
+     * {@inheritdoc}
+     */
     public function getMapDefault()
     {
-        return is_bool($this->config['default']) ? $this->config['default'] : false;
+        return (boolean) $this->config['default'];
     }
 
 
@@ -117,7 +125,7 @@ class BooleanField implements BranaFieldInterface
 
     public function hydrate($value)
     {
-        return (boolean) $value;
+        return (bool) $value;
     }
 
     public function dehydrate($value)

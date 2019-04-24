@@ -13,3 +13,8 @@ brana_cmf:
           serializer: Brana\CmfBundle\Store\Serializer\Field\ObscureSerializer
         username:
           required: true
+    things:
+      content_type: things
+      serializer: Brana\CmfBundle\Store\Serializer\UserSerializer
+      fields_keys: all
+      fields: ~

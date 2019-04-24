@@ -11,9 +11,9 @@ class ChoiceField implements BranaFieldInterface
     public function __construct(array $config, $name)
     {
         $fallback = [
-            'default' => false,
             'nullable' => true,
-            'values' => []
+            'values' => [],
+            'length' => 128
         ];
         $this->config = array_merge($fallback, $config);
         $this->config['name'] = $name;
@@ -72,7 +72,7 @@ class ChoiceField implements BranaFieldInterface
      */
     public function getMapLength()
     {
-        return 128;
+        return $this->config['length'];
     }
 
 
@@ -118,6 +118,15 @@ class ChoiceField implements BranaFieldInterface
     public function getMapDefault()
     {
         return $this->config['default'];
+    }
+
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getMapUseDefault(): bool
+    {   
+      return array_key_exists('default', $this->config);
     }
 
 

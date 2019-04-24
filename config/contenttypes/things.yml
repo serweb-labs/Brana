@@ -1,0 +1,29 @@
+things:
+    name: things
+    fields:
+        id:
+            type: integer
+            pk: true
+        username:
+            type: text
+            nullable: false
+            default: asdasd
+        name:
+            type: text
+        password:
+            type: text
+        email:
+            type: text
+        from_date:
+            type: date
+        is_admin:
+            type: boolean
+        type:
+            type: choice
+            values:
+                - name: 'staff'
+                  value: 1
+                - name: 'contact'
+                  value: 2
+    default_status: published
+    searchable: false

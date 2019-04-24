@@ -10,7 +10,11 @@ class PasswordField implements BranaFieldInterface
 
     public function __construct(array $config, $name)
     {
-        $this->config = $config;
+        $fallback = [
+            'nullable' => true,
+            'length' => 512
+        ];
+        $this->config = array_merge($fallback, $config);
         $this->config['name'] = $name;
     }
 
@@ -61,7 +65,7 @@ class PasswordField implements BranaFieldInterface
      */
     public function getMapLength()
     {
-        return $config['length'] ?? 256;
+        return $this->config['length'];
     }
 
 
@@ -70,7 +74,7 @@ class PasswordField implements BranaFieldInterface
      */
     public function getMapIsNullable()
     {
-        return $config['nullable'] ?? false;
+        return $this->config['nullable'];
     }
 
 
@@ -104,9 +108,18 @@ class PasswordField implements BranaFieldInterface
     /**
      * {@inheritdoc}
      */
+    public function getMapUseDefault(): bool
+    {   
+      return array_key_exists('default', $this->config);
+    }
+
+
+    /**
+     * {@inheritdoc}
+     */
     public function getMapDefault()
     {
-        return $this->config['default'] ?? '';
+        return (string) $this->config['default'];
     }
 
 

@@ -79,12 +79,11 @@ class RestContentController extends AbstractController
             $manager = $this->store->$contenttype;
             $item = $manager->get($slug);
             if (!isset($item)) {
-                throw new \Exception("{$contenttype}/{$slug}: resource not found");
+                return new JsonResponse(array('errors' => ["{$contenttype}/{$slug}: resource not found"]), 404);
             }
             $data = $serializer->retrieve($item);
             return new JsonResponse($data);
         }
-        return new JsonResponse(array('errors' => ["{$contenttype}/{$slug}: resource not found"]), 404);
     }
 
 
