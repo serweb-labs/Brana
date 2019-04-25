@@ -41,7 +41,7 @@ class DateField implements BranaFieldInterface
      * {@inheritdoc}
      */
     public function dehydrate($value)
-    {
+    { 
         return $value->format('Y-m-d');
     }
 

@@ -23,7 +23,7 @@ class DateSerializer // implements BranaSerializerInterface
         return null;
     }
 
-
+    // TODO: check format, handle exceptions
     public static function toInternal($value, array $options = [])
     {   
         $options = self::getOptions($options);

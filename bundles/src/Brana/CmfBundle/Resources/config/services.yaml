@@ -1,5 +1,5 @@
 parameters:
-
+    secret: '%env(string:APP_PRIVATE_KEY)%'
 services:
     _defaults:
         autowire: true 
@@ -33,3 +33,8 @@ services:
         tags: ['console.command']
         public: true
 
+    Brana\CmfBundle\Auth\JwtBearerAuth:
+        autowire: false
+        arguments:
+            - '%secret%'
+            - '@Brana\CmfBundle\Store\Store'

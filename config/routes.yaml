@@ -1,4 +1,15 @@
-# index
+# AUTHENTICATION
+jwt_login:
+  path: /api/auth/login
+  controller: App\Main\Controller\AuthController::login
+  methods: [POST]
+
+jwt_whoami:
+  path: /api/auth/whoami
+  controller: App\Main\Controller\AuthController::whoami
+  methods:  [GET]
+
+# CONTENT TYPES
 rest_index:
   path: /api/{contenttype}
   controller: App\Main\Controller\RestContentController::index
@@ -28,3 +39,5 @@ rest_destroy:
   path: /api/{contenttype}/{slug}
   controller: App\Main\Controller\RestContentController::destroy
   methods:  [DELETE]
+
+

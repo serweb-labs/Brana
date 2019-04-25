@@ -3,10 +3,11 @@ namespace App\Main\Controller;
 
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Brana\CmfBundle\Store\Store;
+use Brana\CmfBundle\Auth\JwtBearerAuth;
 use App\Main\Service\Brana;
-use Symfony\Component\HttpFoundation\Request;
 
 class RestContentController extends AbstractController
 {
@@ -14,9 +15,10 @@ class RestContentController extends AbstractController
     private $defaultSerializerClass;
 
 
-    public function __construct(Brana $brana)
+    public function __construct(Brana $brana, JwtBearerAuth $auth)
     {
         $this->store = $brana->store;
+        $this->auth = $auth;
         $this->defaultSerializerClass = \Brana\CmfBundle\Store\Serializer\ContentSerializer::class;
     }
 
