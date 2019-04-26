@@ -68,6 +68,9 @@
     "egulias/email-validator": {
         "version": "2.1.7"
     },
+    "firebase/php-jwt": {
+        "version": "v5.0.0"
+    },
     "jdorn/sql-formatter": {
         "version": "v1.2.17"
     },

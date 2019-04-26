@@ -5,6 +5,7 @@ namespace Brana\CmfBundle\Auth;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Psr\Log\LoggerInterface;
 use Firebase\JWT\JWT;
+use Firebase\JWT\ExpiredException;
 use Brana\CmfBundle\Store\Store;
 
 /**
@@ -14,36 +15,71 @@ use Brana\CmfBundle\Store\Store;
  */
 class JwtBearerAuth // implements AuthProviderInterface
 {   
-    public function __construct($privateKey, Store $store)
+    public function __construct(string $privateKey, string $publicKey, Store $store)
     {
-        $this->privateKey = $privateKey;
         $this->store = $store;
-        
+        $this->config = [
+            "private_key" => $privateKey,
+            "public_key" => $publicKey,
+            "algorithm" => "RS256",
+            "window_time" => 300
+        ];
     }
 
 
-    public function login()
+    public function login($user, $password)
     {   
-
-        $token = array(
-            "iss" => "http://example.org",
-            "aud" => "http://example.com",
-            "iat" => 1356999524,
-            "nbf" => 1357000000
+        // dump($user, $password);
+        // get user and check password
+        // $user = $this->store->user->get($user);
+        // $currentHash = $user->getHashPass();
+        // $user->setHashPass($password);
+        // $compareHash = $user->getHashPass();
+        // if ($currentHash !== $compareHash) {
+        //   return false;
+        // }
+        $time = time();
+        $payload = array(
+            "iat" => $time,
+            "exp" =>  $time + $this->config["window_time"],
+            'data' => [
+                'uid' => $user
+            ]
         );
 
-        $token = JWT::encode($token, $this->privateKey, 'RS256');
-        return [$token];
+        $token = JWT::encode($payload, $this->config["private_key"], $this->config["algorithm"]);
+        return $token;
     }
 
 
-    public function whoami()
+    public function whoami(string $token)
     {
-
+        $result = $this->isAuthorized($token);
+        if ($result['success']) {
+            return $result['data']->data->uid;
+        }
+        return 0;
     }
 
-    public function isAuthenticated()
+    public function isAuthorized($token)
     {
+        // Validate Token
+        try {
+            $data = JWT::decode($token, $this->config["public_key"], array($this->config["algorithm"]));
+            $result = array(
+                'success' => true,
+                'data' => $data
+            );
+        } catch (\Exception $e) {
+            if ($e instanceof ExpiredException) {
+                $error = "expired";
+            }
+            $result = array(
+                'success' => false,
+                'error' => $error
+            );
+        }
+        return $result;
 
     }
 

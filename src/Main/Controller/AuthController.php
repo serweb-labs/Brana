@@ -24,15 +24,26 @@ class AuthController extends AbstractController
 
     public function login(Request $request)
     {  
-       $data = $this->auth->login();
-       return new JsonResponse($data);
-
+        $content = json_decode($request->getContent(), true);
+        $result = $this->auth->login($content['user'], $content['password']);
+        if ($result !== false) {
+            $data = ["data"=> ["success" => true, "token" => $result]];
+        }
+        else {
+            $data = ["data"=> ["success" => false]];
+        }
+        return new JsonResponse($data);
     }
 
 
     public function whoami(Request $request)
     {   
-        $data =  $this->auth->whoami();
+        $authorizationHeader = $request->headers->get('authorization');
+        if (strpos($authorizationHeader, 'Bearer' . " ") !== false) {
+            $token = str_replace('Bearer' . " ", "", $authorizationHeader);
+        }
+        $uid = $this->auth->whoami($token);
+        $data = ["data"=> ["user" => $uid]];
         return new JsonResponse($data);
 
     }

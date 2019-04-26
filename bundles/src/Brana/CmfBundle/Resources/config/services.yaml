@@ -1,5 +1,7 @@
 parameters:
-    secret: '%env(string:APP_PRIVATE_KEY)%'
+    private_key: '%env(string:APP_PRIVATE_KEY)%'
+    public_key: '%env(string:APP_PUBLIC_KEY)%'
+
 services:
     _defaults:
         autowire: true 
@@ -36,5 +38,6 @@ services:
     Brana\CmfBundle\Auth\JwtBearerAuth:
         autowire: false
         arguments:
-            - '%secret%'
+            - '%private_key%'
+            - '%public_key%'
             - '@Brana\CmfBundle\Store\Store'
