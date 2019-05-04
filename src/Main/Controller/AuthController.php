@@ -43,7 +43,7 @@ class AuthController extends AbstractController
             $token = str_replace('Bearer' . " ", "", $authorizationHeader);
         }
         $uid = $this->auth->whoami($token);
-        $data = ["data"=> ["user" => $uid]];
+        $data = ["data"=> ["id" => $uid]];
         return new JsonResponse($data);
 
     }
