@@ -40,7 +40,7 @@ class JwtBearerAuth // implements AuthProviderInterface
             "iat" => $time,
             "exp" =>  $time + $this->config["window_time"],
             'data' => [
-                'uid' => $user
+                'uid' => $user->id
             ]
         );
 
