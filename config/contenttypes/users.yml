@@ -1,15 +1,21 @@
 users:
+    entity: App\User\Entity
+    # manager: /sadasd/sdsd/
     name: users
     fields:
         id:
             type: integer
             pk: true
         username:
-            type: text
+            type: slug
+            nullable: false
         name:
             type: text
-        password:
+            nullable: false
+        hash:
             type: text
+            nullable: true
+            length: 128
         email:
             type: text
         from_date:

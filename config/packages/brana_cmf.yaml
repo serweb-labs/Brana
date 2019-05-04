@@ -3,7 +3,6 @@ brana_cmf:
     users:
       content_type: users
       serializer: Brana\CmfBundle\Store\Serializer\UserSerializer
-      fields_keys: all
       fields:
         id:
           read_only: true
@@ -11,8 +10,13 @@ brana_cmf:
           format: d/m/Y
         password:
           serializer: Brana\CmfBundle\Store\Serializer\Field\ObscureSerializer
+          write_only: true
         username:
           required: true
+        name:
+          required: true
+        hash:
+          serializer: Brana\CmfBundle\Store\Serializer\Field\ObscureSerializer
     things:
       content_type: things
       serializer: Brana\CmfBundle\Store\Serializer\UserSerializer
