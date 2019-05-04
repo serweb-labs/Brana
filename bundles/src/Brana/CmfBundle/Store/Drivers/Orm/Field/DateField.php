@@ -130,7 +130,16 @@ class DateField implements BranaFieldInterface
      */
     public function getMapIsPk()
     {
-        return $this->config['name'] === 'id';
+        return false;
+    }
+
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getMapIsUnique()
+    {
+        return false;
     }
 
 

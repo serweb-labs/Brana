@@ -79,7 +79,7 @@ class MetadataDriver
                 'precision'        => $branaField->getMapPrecision(),
                 'scale'            => $branaField->getMapScale(),
                 'id'               => $branaField->getMapIsPk(),
-                'unique'           => $branaField->getMapIsPk(),
+                'unique'           => $branaField->getMapIsPk() || $branaField->getMapIsUnique(),
                 '_fieldtype'       => $branaField->getName(),
                 '_fieldInstance'   => $branaField,
             ];

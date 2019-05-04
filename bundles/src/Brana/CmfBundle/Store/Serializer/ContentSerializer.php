@@ -51,8 +51,11 @@ class ContentSerializer // implements BranaSerializerInterface
         $fields = [];
         $ctName = $this->manager->getContentTypeName();
         foreach ($keys as $key) {
-            $type = $this->manager->getContentType()['fields'][$key]['type'];
-            $fieldSerializer = $this->fieldMapping[$type];
+            $fieldSerializer = null;
+            if (isset($this->manager->getContentType()['fields'][$key])) {
+                $type = $this->manager->getContentType()['fields'][$key]['type'];
+                $fieldSerializer = $this->fieldMapping[$type];
+            }
             $fields[$key] = [
                 'serializer' => $fieldSerializer,
                 'required' => false,
@@ -177,14 +180,10 @@ class ContentSerializer // implements BranaSerializerInterface
         if (0 === count($errors)) {
             $values = $this->setValues($values);
             $values = $this->transform($values, $fields);
-            foreach ($fields as $key => $value) {
-                if (isset($values[$key])) {
-                    $props[$key] = $value['serializer']::toInternal($values[$key]);
-                }
-            }
             $instance = $this->manager->create($props);
+            $this->unserialize($fields, $values, $instance);
             $this->manager->save($instance);
-            $data = $this->retrieve($instance);
+            $data = $this->serialize($instance, $fields);
         }
 
         return ['data' => $data['data'], 'errors' => $errors];
@@ -202,35 +201,52 @@ class ContentSerializer // implements BranaSerializerInterface
         if (0 === count($errors)) {
             $values = $this->setValues($values);
             $values = $this->transform($values, $fields);
-            foreach ($fields as $key => $value) {
-                if ($value['read_only']) {
-                    continue;
-                }
-                if (isset($values[$key])) {
-                    $res = $value['serializer']::toInternal($values[$key], $value);
-                    $instance->set($key, $res);
-                }
-            }
+            $this->unserialize($fields, $values, $instance);
             $this->manager->save($instance);
-            $data = $this->retrieve($instance);
+            // todo: handle errors and data
+            $data = $this->serialize($instance, $fields);
         }
 
-        return ['data' => $data, 'errors' => $errors];
+        return ['data' => $data['data'], 'errors' => $errors];
     }
 
 
     public function retrieve($instance)
     {
-        $data = [];
-        $errors = [];
         $fieldKeys = $this->getFieldsKeys();
         $fields = $this->getFields($fieldKeys);
         $fields = $this->setFields($fields);
+        return $this->serialize($instance,  $fields);
+    }
+
+
+    public function serialize($instance, $fields)
+    {
+        $data = [];
+        $errors = [];
         foreach ($fields as $key => $value) {
+            if ($value['write_only']) {
+                continue;
+            }
             $data[$key] = $value['serializer']::toRepresentation($instance->get($key), $value);
         }
         return ['data' => $data, 'errors' => $errors];
     }
+
+    public function unserialize($fields, $values, $instance)
+    {
+        foreach ($fields as $key => $value) {
+            if ($value['read_only']) {
+                continue;
+            }
+            if (isset($values[$key])) {
+                $res = $value['serializer']::toInternal($values[$key], $value);
+                $instance->set($key, $res);
+            }
+        }
+        return $instance;
+    }
+
 
     public function resolveAndCall($value, ...$args)
     {

@@ -16,7 +16,6 @@ class TextField implements BranaFieldInterface
         ];
         $this->config = array_merge($fallback, $config);
         $this->config['name'] = $name;
-        // dump($name, $this->config);
     }
 
     /**
@@ -128,7 +127,16 @@ class TextField implements BranaFieldInterface
      */
     public function getMapIsPk()
     {
-        return $this->config['name'] === 'id';
+        return false;
+    }
+
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getMapIsUnique()
+    {
+        return false;
     }
 
 

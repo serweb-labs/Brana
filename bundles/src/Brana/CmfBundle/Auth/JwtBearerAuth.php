@@ -29,15 +29,12 @@ class JwtBearerAuth // implements AuthProviderInterface
 
     public function login($user, $password)
     {   
-        // dump($user, $password);
         // get user and check password
-        // $user = $this->store->user->get($user);
-        // $currentHash = $user->getHashPass();
-        // $user->setHashPass($password);
-        // $compareHash = $user->getHashPass();
-        // if ($currentHash !== $compareHash) {
-        //   return false;
-        // }
+        $user = $this->store->users->get($user);
+        $hash = $user->getHash();
+        if (!password_verify($password, $hash)) {
+            return false;
+        } 
         $time = time();
         $payload = array(
             "iat" => $time,

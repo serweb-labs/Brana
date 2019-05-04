@@ -1,20 +1,20 @@
 <?php
 
 namespace Brana\CmfBundle\Store\Entity;
+use Brana\CmfBundle\Store\Entity\BranaEntityInterface;
 
 /**
  *
  */
-class ContentEntity implements BranaEntityInterface
+class DinamicEntity implements BranaEntityInterface
 {
     protected $meta;
 
-
-    public function __construct($contenttype, $data)
+    public function __construct($contentType, $data)
     {   
-        $this->meta = $contenttype;
-        if (isset($contenttype['fields'])) {
-            foreach ($contenttype['fields'] as $prop => $value) {
+        $this->meta = $contentType;
+        if (isset($contentType['fields'])) {
+            foreach ($contentType['fields'] as $prop => $value) {
                 if (array_key_exists($prop, $data)) {
                     $this->set($prop, $data[$prop]);
                 }
@@ -33,7 +33,7 @@ class ContentEntity implements BranaEntityInterface
     {
         $getter = 'get' . ucfirst($prop);
         if(method_exists($this, $getter)) {
-            return $getter();
+            return $this->$getter();
         }
         else if (isset($this->$prop)) {
             return $this->$prop;
@@ -45,7 +45,7 @@ class ContentEntity implements BranaEntityInterface
     {   
         $setter = 'set' . ucfirst($prop);
         if(method_exists($this, $setter)) {
-            return $setter($value);
+            return $this->$setter($value);
         }
         $this->$prop = $value;
     }

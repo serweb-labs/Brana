@@ -140,6 +140,14 @@ class ChoiceField implements BranaFieldInterface
 
 
     /**
+     * {@inheritdoc}
+     */
+    public function getMapIsUnique()
+    {
+        return false;
+    }
+
+    /**
      * Returns additional options to be passed to the storage field.
      *
      * @return array An array of options
