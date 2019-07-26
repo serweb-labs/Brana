@@ -46,7 +46,8 @@ class ContentManager implements ManagerInterface
     }
 
     public function create(array $data = [])
-    {
+    {   
+        // dump($this->entityClass);
         return new $this->entityClass($this->contentType, $data);
     }
 

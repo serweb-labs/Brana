@@ -50,7 +50,8 @@ class MetadataDriver
             'slug' => 'Brana\CmfBundle\Store\Drivers\Orm\Field\SlugField',
             'date' => 'Brana\CmfBundle\Store\Drivers\Orm\Field\DateField',
             'boolean' => 'Brana\CmfBundle\Store\Drivers\Orm\Field\BooleanField',
-            'choice' => 'Brana\CmfBundle\Store\Drivers\Orm\Field\ChoiceField'
+            'choice' => 'Brana\CmfBundle\Store\Drivers\Orm\Field\ChoiceField',
+            'relation' => 'Brana\CmfBundle\Store\Drivers\Orm\Field\RelationField',
         ];
         return new $map[$fieldDef['type']]($fieldDef, $kField);
     }
@@ -69,17 +70,17 @@ class MetadataDriver
         $metadata->setIdentifier(['id']); // TODO: choose pk   
         
         foreach ($ct['fields'] as $kField => $vField) {
-            $branaField = $this->getBranaField($vField, $kField);
+            $branaField = $this->getBranaField($vField, $kField, $ctname);
             $mapField = [
                 'fieldName'        => $kField,
                 'type'             => $branaField->getMapTypeName(),
                 'length'           => $branaField->getMapLength(),
                 'nullable'         => $branaField->getMapIsNullable(),
-                'platformOptions'  => $branaField->getMapPlatformOptions(),
                 'precision'        => $branaField->getMapPrecision(),
                 'scale'            => $branaField->getMapScale(),
                 'id'               => $branaField->getMapIsPk(),
                 'unique'           => $branaField->getMapIsPk() || $branaField->getMapIsUnique(),
+                'relations'        => $branaField->getMapRelations(),
                 '_fieldtype'       => $branaField->getName(),
                 '_fieldInstance'   => $branaField,
             ];

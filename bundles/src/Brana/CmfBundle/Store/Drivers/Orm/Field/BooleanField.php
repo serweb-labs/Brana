@@ -5,13 +5,14 @@ namespace Brana\CmfBundle\Store\Drivers\Orm\Field;
 /**
  * @author Luciano Rodriguez <luciano.rdz@gmail.com>
  */
-class BooleanField implements BranaFieldInterface
+class BooleanField extends BranaFieldBase implements BranaFieldInterface
 {
 
     public function __construct(array $config, $name)
     {
         $fallback = [
-            'nullable' => true
+            'nullable' => true,
+            'length' => null, // TODO
         ];
         $this->config = array_merge($fallback, $config);
         $this->config['name'] = $name;
@@ -33,22 +34,6 @@ class BooleanField implements BranaFieldInterface
         return 'boolean';
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getMapType() {
-        return Type::getType($this->getMapTypeName());
-    }
-
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getMapLength()
-    {
-        return null;
-    }
-
 
     /**
      * {@inheritdoc}
@@ -56,15 +41,6 @@ class BooleanField implements BranaFieldInterface
     public function getMapIsNullable()
     {
         return $this->config['nullable'];
-    }
-
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getMapPlatformOptions()
-    {
-        return null;
     }
 
 
@@ -122,20 +98,11 @@ class BooleanField implements BranaFieldInterface
     }
 
 
-    /**
-     * Returns additional options to be passed to the storage field.
-     *
-     * @return array An array of options
-     */
-    public function getMapOptions()
-    {
-        return [];
-    }
-
     public function hydrate($value)
     {
         return (bool) $value;
     }
+
 
     public function dehydrate($value)
     {

@@ -5,7 +5,7 @@ namespace Brana\CmfBundle\Store\Drivers\Orm\Field;
 /**
  * @author Luciano Rodriguez <luciano.rdz@gmail.com>
  */
-class ChoiceField implements BranaFieldInterface
+class ChoiceField extends BranaFieldBase implements BranaFieldInterface
 {
     private $internals = [];
     public function __construct(array $config, $name)
@@ -82,15 +82,6 @@ class ChoiceField implements BranaFieldInterface
     public function getMapIsNullable()
     {
         return $this->config['nullable'];
-    }
-
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getMapPlatformOptions()
-    {
-        return null;
     }
 
 

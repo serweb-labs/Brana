@@ -5,7 +5,7 @@ namespace Brana\CmfBundle\Store\Drivers\Orm\Field;
 /**
  * @author Luciano Rodriguez <luciano.rdz@gmail.com>
  */
-class TextField implements BranaFieldInterface
+class TextField extends BranaFieldBase implements BranaFieldInterface
 {
 
     public function __construct(array $config, $name)
@@ -75,15 +75,6 @@ class TextField implements BranaFieldInterface
     public function getMapIsNullable()
     {
         return $this->config['nullable'];
-    }
-
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getMapPlatformOptions()
-    {
-        return null;
     }
 
 

@@ -21,6 +21,7 @@ class ContentSerializer // implements BranaSerializerInterface
             'slug' => Field\TextSerializer::class,
             'boolean' => Field\TextSerializer::class,
             'choice' => Field\ChoiceSerializer::class,
+            'relation' => Field\RelationSerializer::class,
         ];
     }
 

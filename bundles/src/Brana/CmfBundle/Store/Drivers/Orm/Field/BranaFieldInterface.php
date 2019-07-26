@@ -66,13 +66,6 @@ interface BranaFieldInterface
     public function getMapIsNullable();
 
     /**
-     * Platform options
-     * 
-     * @return array
-     */
-    public function getMapPlatformOptions();
-
-    /**
      * Map precision
      * 
      * @return integer

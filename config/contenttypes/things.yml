@@ -18,6 +18,9 @@ things:
             type: date
         is_admin:
             type: boolean
+        user_rel:
+            type: relation
+            target: users
         type:
             type: choice
             values:

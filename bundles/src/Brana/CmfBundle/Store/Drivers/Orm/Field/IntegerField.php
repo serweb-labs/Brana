@@ -5,7 +5,7 @@ namespace Brana\CmfBundle\Store\Drivers\Orm\Field;
 /**
  * @author Luciano Rodriguez <luciano.rdz@gmail.com>
  */
-class IntegerField implements BranaFieldInterface
+class IntegerField extends BranaFieldBase implements BranaFieldInterface
 {
 
     public function __construct(array $config, $name)
@@ -58,15 +58,6 @@ class IntegerField implements BranaFieldInterface
     public function getMapIsNullable()
     {
         return $this->config['pk'] ? false : $this->config['nullable'];
-    }
-
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getMapPlatformOptions()
-    {
-        return null;
     }
 
 

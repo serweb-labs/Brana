@@ -5,7 +5,7 @@ namespace Brana\CmfBundle\Store\Drivers\Orm\Field;
 /**
  * @author Luciano Rodriguez <luciano.rdz@gmail.com>
  */
-class PasswordField implements BranaFieldInterface
+class PasswordField extends BranaFieldBase implements BranaFieldInterface
 {
 
     public function __construct(array $config, $name)
@@ -55,14 +55,6 @@ class PasswordField implements BranaFieldInterface
     /**
      * {@inheritdoc}
      */
-    public function getMapType() {
-        return Type::getType($this->getMapTypeName());
-    }
-
-
-    /**
-     * {@inheritdoc}
-     */
     public function getMapLength()
     {
         return $this->config['length'];
@@ -75,15 +67,6 @@ class PasswordField implements BranaFieldInterface
     public function getMapIsNullable()
     {
         return $this->config['nullable'];
-    }
-
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getMapPlatformOptions()
-    {
-        return null;
     }
 
 

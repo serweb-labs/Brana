@@ -5,54 +5,9 @@ namespace Brana\CmfBundle\Store\Drivers\Orm\Field;
 /**
  * @author Luciano Rodriguez <luciano.rdz@gmail.com>
  */
-class DateField extends BranaFieldBase implements BranaFieldInterface
+abstract class BranaFieldBase implements BranaFieldInterface
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function __construct(array $config, $name)
-    {
-        $fallback = [
-            'nullable' => true
-        ];
-        $this->config = array_merge($fallback, $config);
-        $this->config['name'] = $name;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getName()
-    {
-        return 'date';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function hydrate($value)
-    {
-        $datetime = new \DateTime();
-        return $datetime->createFromFormat('Y-m-d', $value);
-    }
-
-
-    /**
-     * {@inheritdoc}
-     */
-    public function dehydrate($value)
-    { 
-        return $value->format('Y-m-d');
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getMapTypeName()
-    {
-        return 'date';
-    }
-
+    public $config = [];
 
     /**
      * {@inheritdoc}
@@ -67,16 +22,7 @@ class DateField extends BranaFieldBase implements BranaFieldInterface
      */
     public function getMapLength()
     {
-        return null;
-    }
-
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getMapIsNullable()
-    {
-        return $this->config['nullable'];
+        return $this->config['length'];
     }
 
 
@@ -121,7 +67,7 @@ class DateField extends BranaFieldBase implements BranaFieldInterface
      */
     public function getMapIsPk()
     {
-        return false;
+        return (bool) $this->config['pk'] ?? false;
     }
 
 
@@ -130,13 +76,20 @@ class DateField extends BranaFieldBase implements BranaFieldInterface
      */
     public function getMapIsUnique()
     {
-        return false;
+        return (bool) ($this->config['unique'] ?? false);
     }
 
 
     /**
-     * Returns additional options to be passed to the storage field.
-     *
+     * {@inheritdoc}
+     */
+    public function getMapRelations()
+    {
+        return null;
+    }
+
+
+    /**
      * @return array An array of options
      */
     public function getMapOptions()
@@ -144,4 +97,15 @@ class DateField extends BranaFieldBase implements BranaFieldInterface
         return [];
     }
 
+
+    public function hydrate($value)
+    {
+        return (integer) $value;
+    }
+
+
+    public function dehydrate($value)
+    {
+        return (integer) $value;
+    }
 }

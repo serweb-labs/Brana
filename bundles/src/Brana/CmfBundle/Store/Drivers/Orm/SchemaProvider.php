@@ -53,11 +53,7 @@ final class SchemaProvider implements SchemaProviderInterface
         $options = array();
         $options['length'] = isset($mapping['length']) ? $mapping['length'] : null;
         $options['notnull'] = isset($mapping['nullable']) ? ! $mapping['nullable'] : true;
-        if ($class->isInheritanceTypeSingleTable() && count($class->parentClasses) > 0) {
-            $options['notnull'] = false;
-        }
-        $options['platformOptions'] = array();
-        $options['platformOptions']['version'] = $class->isVersioned && $class->versionField == $mapping['fieldName'] ? true : false;
+
         if (strtolower($columnType) == 'string' && $options['length'] === null) {
             $options['length'] = 255;
         }
@@ -98,6 +94,13 @@ final class SchemaProvider implements SchemaProviderInterface
         $isUnique = isset($mapping['unique']) ? $mapping['unique'] : false;
         if ($isUnique) {
             $table->addUniqueIndex(array($columnName));
+        }
+
+        // TODO: support others Pks
+        if (isset($mapping['relations'])) {
+            if ($mapping['relations']['direction'] === "to") {
+                $table->addForeignKeyConstraint($mapping['relations']['target'], array($mapping['fieldName']), array('id'));
+            }
         }
     }
 }

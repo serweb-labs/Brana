@@ -6,7 +6,7 @@ use Brana\CmfBundle\Store\Entity\BranaEntityInterface;
 /**
  *
  */
-class DinamicEntity implements BranaEntityInterface
+class DynamicEntity implements BranaEntityInterface
 {
     protected $meta;
 
