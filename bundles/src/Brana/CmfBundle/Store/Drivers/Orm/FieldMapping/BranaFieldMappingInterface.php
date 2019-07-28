@@ -1,6 +1,5 @@
 <?php
-
-namespace Brana\CmfBundle\Store\Drivers\Orm\Field;
+namespace Brana\CmfBundle\Store\Drivers\Orm\FieldMapping;
 
 use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Types\Type;
@@ -10,7 +9,7 @@ use Doctrine\DBAL\Types\Type;
  *
  * @author Luciano Rodriguez <luciano.rdz@gmail.com>
  */
-interface BranaFieldInterface
+interface BranaFieldMappingInterface
 {
     /**
      * Returns the name of the field.

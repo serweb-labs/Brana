@@ -89,6 +89,16 @@ class ContentManager implements ManagerInterface
         return $this->contentType;
     }
 
+    public function getField($name)
+    {
+        return $this->contentType['fields'][$name];
+    }
+
+    public function getFields()
+    {
+        return $this->contentType['fields'];
+    }
+
     public function getContentTypeName()
     {
         return $this->contentType['name'];

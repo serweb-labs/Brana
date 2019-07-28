@@ -6,7 +6,7 @@ use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Driver\Connection;
 use Doctrine\DBAL\Schema\Schema;
 
-use Brana\CmfBundle\Store\Drivers\Orm\Mapping\MetadataDriver;
+use Brana\CmfBundle\Store\Drivers\Orm\Metadata\DriverMetadata;
 use Brana\CmfBundle\Store\Store;
 use Brana\CmfBundle\Store\StoreDriver;
 use Brana\CmfBundle\Store\StoreInteractorInterface;
@@ -19,18 +19,20 @@ class OrmDriver implements StoreDriver
     private $connection;
     public $store;
 
-    public function __construct(MetadataDriver $metadataDriver, Connection $connection)
+
+    public function __construct(DriverMetadata $driverMetadata, Connection $connection)
     {
-        $this->metadataDriver = $metadataDriver;
+        $this->driverMetadata = $driverMetadata;
         $this->metadata = [];
         $this->connection = $connection;
     }
+
 
     public function load(Store $store):void
     {
         $this->store = $store;
         foreach ($store->getContentTypes() as $key) {
-            $this->metadata[$key] = $this->metadataDriver->loadMetadataForContenttype($key);
+            $this->metadata[$key] = $this->driverMetadata->loadMetadataForContenttype($key);
         }
     }
 

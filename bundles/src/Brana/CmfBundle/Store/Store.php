@@ -23,7 +23,7 @@ class Store
     function __construct(ContentTypesConfig $contenttypes, ContainerInterface $container)
     {   
         $driverName = 'Orm';
-        $driverClass = 'Brana\CmfBundle\Store\Drivers\\' . $this->camelize($driverName . " Driver");
+        $driverClass = 'Brana\CmfBundle\Store\Drivers\\' .  $this->camelize($driverName . " Driver");
         $interactorClass = 'Brana\CmfBundle\Store\Drivers\\' . $driverName . '\StoreInteractor';
         $this->contenttypes = $contenttypes;
         $this->driver = $container->get($driverClass);

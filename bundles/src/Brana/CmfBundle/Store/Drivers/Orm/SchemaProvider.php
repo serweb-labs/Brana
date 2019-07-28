@@ -12,9 +12,8 @@ final class SchemaProvider implements SchemaProviderInterface
     private $driver;
     private $schema;
 
-    public function __construct(OrmDriver $driver, BranaKernel $brana)
+    public function __construct(OrmDriver $driver)
     {
-        $this->brana = $brana;
         $this->driver = $driver;
         $this->schema = new Schema();
     }
@@ -47,7 +46,28 @@ final class SchemaProvider implements SchemaProviderInterface
      * @return array The portable column definition as required by the DBAL.
      */
     private function gatherColumn($class, array $mapping, Table $table)
-    {
+    {   
+
+        // prevent add column
+        if (isset($mapping['relations'])) {
+            switch ($mapping['relations']['relation_type']) {
+                case 'one-to-many':
+                    # prevent
+                    return;
+                    break;
+                case 'one-to-one':
+                    # not implemented yet
+                    break;
+                case 'many-to-many':
+                    # not implemented yet
+                    break;
+                default:
+                    break;
+            }
+
+        }
+
+        // add column
         $columnName = $mapping['fieldName'];
         $columnType = $mapping['type'];
         $options = array();
@@ -98,9 +118,23 @@ final class SchemaProvider implements SchemaProviderInterface
 
         // TODO: support others Pks
         if (isset($mapping['relations'])) {
-            if ($mapping['relations']['direction'] === "to") {
-                $table->addForeignKeyConstraint($mapping['relations']['target'], array($mapping['fieldName']), array('id'));
+            switch ($mapping['relations']['relation_type']) {
+                case 'many-to-one':
+                    $table->addForeignKeyConstraint($mapping['relations']['target'], array($mapping['fieldName']), array('id'));
+                    break;
+                case 'one-to-one':
+                    if ($mapping['relations']['direction'] === 'to') {
+                        $table->addForeignKeyConstraint($mapping['relations']['target'], array($mapping['fieldName']), array('id'));
+                    }
+                    break;
+                case 'many-to-many':
+                    # not implemented yet
+                    break;
+                default:
+                    break;
             }
         }
+
+
     }
 }

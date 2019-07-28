@@ -1,37 +1,54 @@
 <?php
 
-namespace Brana\CmfBundle\Store\Drivers\Orm\Field;
+namespace Brana\CmfBundle\Store\Drivers\Orm\FieldMapping;
 
 /**
  * @author Luciano Rodriguez <luciano.rdz@gmail.com>
  */
-class BooleanField extends BranaFieldBase implements BranaFieldInterface
+class DateFieldMapping extends BranaFieldMappingBase implements BranaFieldMappingInterface
 {
-
-    public function __construct(array $config, $name)
+    /**
+     * {@inheritdoc}
+     */
+    public function hydrate($value)
     {
-        $fallback = [
-            'nullable' => true,
-            'length' => null, // TODO
-        ];
-        $this->config = array_merge($fallback, $config);
-        $this->config['name'] = $name;
+        $datetime = new \DateTime();
+        return $datetime->createFromFormat('Y-m-d', $value);
     }
+
 
     /**
      * {@inheritdoc}
      */
-    public function getName()
-    {   
-        return 'boolean';
+    public function dehydrate($value)
+    { 
+        return $value->format('Y-m-d');
     }
+
 
     /**
      * {@inheritdoc}
      */
     public function getMapTypeName()
     {
-        return 'boolean';
+        return 'date';
+    }
+
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getMapType() {
+        return Type::getType($this->getMapTypeName());
+    }
+
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getMapLength()
+    {
+        return null;
     }
 
 
@@ -40,7 +57,7 @@ class BooleanField extends BranaFieldBase implements BranaFieldInterface
      */
     public function getMapIsNullable()
     {
-        return $this->config['nullable'];
+        return $this->model['nullable'];
     }
 
 
@@ -67,7 +84,7 @@ class BooleanField extends BranaFieldBase implements BranaFieldInterface
      */
     public function getMapUseDefault(): bool
     {   
-      return array_key_exists('default', $this->config);
+      return array_key_exists('default', $this->model);
     }
 
 
@@ -76,7 +93,7 @@ class BooleanField extends BranaFieldBase implements BranaFieldInterface
      */
     public function getMapDefault()
     {
-        return (boolean) $this->config['default'];
+        return $this->model['default'];
     }
 
 
@@ -97,15 +114,4 @@ class BooleanField extends BranaFieldBase implements BranaFieldInterface
         return false;
     }
 
-
-    public function hydrate($value)
-    {
-        return (bool) $value;
-    }
-
-
-    public function dehydrate($value)
-    {
-        return (integer) $value;
-    }
 }

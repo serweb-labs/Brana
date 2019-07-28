@@ -8,9 +8,9 @@ brana_cmf:
           read_only: true
         from_date:
           format: d/m/Y
-        password:
-          serializer: Brana\CmfBundle\Store\Serializer\Field\ObscureSerializer
-          write_only: true
+        # password:
+        #   serializer: Brana\CmfBundle\Store\Serializer\Field\ObscureSerializer
+        #   write_only: true
         username:
           required: true
         name:

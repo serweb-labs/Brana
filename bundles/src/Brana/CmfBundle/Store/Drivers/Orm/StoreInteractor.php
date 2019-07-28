@@ -16,11 +16,13 @@ class StoreInteractor implements StoreInteractorInterface
 
     public function __construct(
         ContentTypesConfig $contentTypes,
-        OrmDriver $driver
+        OrmDriver $driver,
+        SchemaProvider $schema
     ) {
         $this->contentTypes = $contentTypes->get();
         $this->driver = $driver;
-    }
+        $this->schema = $schema;
+    }   
 
 
     public function executeBranaQuery(Query $qs)
@@ -92,9 +94,7 @@ class StoreInteractor implements StoreInteractorInterface
         $pkCol = $pkField['columnName'];
 
         // columns
-        $cols = array_map(function ($value) {
-            return $value['columnName'];
-        }, $metadataFields);
+        $cols = array_keys($this->schema->createSchema()->getTable($metadata->tableName)->getColumns());
 
         $result = $qb
             ->select($cols)
@@ -115,15 +115,12 @@ class StoreInteractor implements StoreInteractorInterface
     // TODO: avoid select *
     public function all(string $contentType)
     {
+        
         $qb = $this->dbalQuery();
         $metadata = $this->driver->metadata[$contentType];
         $metadataFields = $metadata->getFieldMappings();
-
         // columns
-        $cols = array_map(function ($value) {
-            return $value['columnName'];
-        }, $metadataFields);
-
+        $cols = array_keys($this->schema->createSchema()->getTable($metadata->tableName)->getColumns());
         $result = $qb
             ->select($cols)
             ->from($metadata->tableName)

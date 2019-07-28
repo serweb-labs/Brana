@@ -1,6 +1,6 @@
 <?php
 
-namespace Brana\CmfBundle\Store\Drivers\Orm\Mapping;
+namespace Brana\CmfBundle\Store\Drivers\Orm\Metadata;
 
 use Brana\CmfBundle\Store\Drivers\Orm\NamingStrategy;
 use Brana\CmfBundle\Store\Drivers\Orm\NamingStrategyInterface;

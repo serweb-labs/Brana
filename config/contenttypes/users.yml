@@ -29,6 +29,11 @@ users:
                   value: 1
                 - name: 'contact'
                   value: 2
+        things_rel:
+            type: relation
+            target: things
+            relation_type: one-to-many
+
         # avatar:
         #     type: image
         #     extensions: [ gif, jpg, png ]

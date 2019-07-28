@@ -10,8 +10,8 @@ things:
             default: asdasd
         name:
             type: text
-        password:
-            type: text
+        # password:
+        #     type: text
         email:
             type: text
         from_date:
@@ -20,6 +20,7 @@ things:
             type: boolean
         user_rel:
             type: relation
+            relation_type: many-to-one
             target: users
         type:
             type: choice

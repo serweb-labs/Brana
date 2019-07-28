@@ -19,7 +19,7 @@ services:
     Brana\CmfBundle\Store\Drivers\Orm\SchemaProvider:
         public: true
 
-    Brana\CmfBundle\Store\Drivers\Orm\Mapping\MetadataDriver: ~
+    Brana\CmfBundle\Store\Drivers\Orm\Metadata\DriverMetadata: ~
 
     Brana\CmfBundle\Config\:
         resource: '../../Config/*'

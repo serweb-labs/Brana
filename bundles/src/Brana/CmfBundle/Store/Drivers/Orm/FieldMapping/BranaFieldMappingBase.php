@@ -1,13 +1,34 @@
 <?php
+namespace Brana\CmfBundle\Store\Drivers\Orm\FieldMapping;
 
-namespace Brana\CmfBundle\Store\Drivers\Orm\Field;
+use Brana\CmfBundle\Store\Field\BranaFieldInterface;
 
 /**
  * @author Luciano Rodriguez <luciano.rdz@gmail.com>
  */
-abstract class BranaFieldBase implements BranaFieldInterface
+abstract class BranaFieldMappingBase implements BranaFieldMappingInterface
 {
-    public $config = [];
+    public $model;
+    public $field;
+
+    /**
+     * {@inheritdoc}
+     */
+    public function __construct(BranaFieldInterface $fieldModel)
+    {
+        $this->field = $fieldModel;
+        $this->model = $fieldModel->getModel();
+    }
+
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getName()
+    {   
+        return $this->field->getName();
+    }
+
 
     /**
      * {@inheritdoc}
@@ -22,7 +43,7 @@ abstract class BranaFieldBase implements BranaFieldInterface
      */
     public function getMapLength()
     {
-        return $this->config['length'];
+        return $this->model['length'];
     }
 
 
@@ -49,7 +70,7 @@ abstract class BranaFieldBase implements BranaFieldInterface
      */
     public function getMapUseDefault(): bool
     {   
-      return array_key_exists('default', $this->config);
+      return array_key_exists('default', $this->model);
     }
 
 
@@ -58,7 +79,7 @@ abstract class BranaFieldBase implements BranaFieldInterface
      */
     public function getMapDefault()
     {
-        return $this->config['default'];
+        return $this->model['default'];
     }
 
 
@@ -67,7 +88,7 @@ abstract class BranaFieldBase implements BranaFieldInterface
      */
     public function getMapIsPk()
     {
-        return (bool) $this->config['pk'] ?? false;
+        return (bool) $this->model['pk'] ?? false;
     }
 
 
@@ -76,7 +97,7 @@ abstract class BranaFieldBase implements BranaFieldInterface
      */
     public function getMapIsUnique()
     {
-        return (bool) ($this->config['unique'] ?? false);
+        return (bool) ($this->model['unique'] ?? false);
     }
 
 

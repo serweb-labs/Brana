@@ -1,31 +1,12 @@
 <?php
 
-namespace Brana\CmfBundle\Store\Drivers\Orm\Field;
+namespace Brana\CmfBundle\Store\Drivers\Orm\FieldMapping;
 
 /**
  * @author Luciano Rodriguez <luciano.rdz@gmail.com>
  */
-class PasswordField extends BranaFieldBase implements BranaFieldInterface
+class PasswordFieldMapping extends BranaFieldMappingBase implements BranaFieldMappingInterface
 {
-
-    public function __construct(array $config, $name)
-    {
-        $fallback = [
-            'nullable' => true,
-            'length' => 512
-        ];
-        $this->config = array_merge($fallback, $config);
-        $this->config['name'] = $name;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getName()
-    {
-        return 'password';
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -43,6 +24,7 @@ class PasswordField extends BranaFieldBase implements BranaFieldInterface
         return $value;
     }
 
+
     /**
      * {@inheritdoc}
      */
@@ -57,7 +39,7 @@ class PasswordField extends BranaFieldBase implements BranaFieldInterface
      */
     public function getMapLength()
     {
-        return $this->config['length'];
+        return $this->model['length'];
     }
 
 
@@ -66,7 +48,7 @@ class PasswordField extends BranaFieldBase implements BranaFieldInterface
      */
     public function getMapIsNullable()
     {
-        return $this->config['nullable'];
+        return $this->model['nullable'];
     }
 
 
@@ -93,7 +75,7 @@ class PasswordField extends BranaFieldBase implements BranaFieldInterface
      */
     public function getMapUseDefault(): bool
     {   
-      return array_key_exists('default', $this->config);
+      return array_key_exists('default', $this->model);
     }
 
 
@@ -102,7 +84,7 @@ class PasswordField extends BranaFieldBase implements BranaFieldInterface
      */
     public function getMapDefault()
     {
-        return (string) $this->config['default'];
+        return (string) $this->model['default'];
     }
 
 
@@ -111,18 +93,7 @@ class PasswordField extends BranaFieldBase implements BranaFieldInterface
      */
     public function getMapIsPk()
     {
-        return $this->config['name'] === 'id';
-    }
-
-
-    /**
-     * Returns additional options to be passed to the storage field.
-     *
-     * @return array An array of options
-     */
-    public function getMapOptions()
-    {
-        return [];
+        return $this->model['name'] === 'id';
     }
 
 }

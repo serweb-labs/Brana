@@ -1,32 +1,12 @@
 <?php
 
-namespace Brana\CmfBundle\Store\Drivers\Orm\Field;
+namespace Brana\CmfBundle\Store\Drivers\Orm\FieldMapping;
 
 /**
  * @author Luciano Rodriguez <luciano.rdz@gmail.com>
  */
-class IntegerField extends BranaFieldBase implements BranaFieldInterface
+class IntegerFieldMapping extends BranaFieldMappingBase implements BranaFieldMappingInterface
 {
-
-    public function __construct(array $config, $name)
-    {
-        $fallback = [
-            'nullable' => true,
-            'length' => 10,
-            'pk' => false
-        ];
-        $this->config = array_merge($fallback, $config);
-        $this->config['name'] = $name;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getName()
-    {   
-        return 'integer';
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -34,6 +14,7 @@ class IntegerField extends BranaFieldBase implements BranaFieldInterface
     {
         return 'integer';
     }
+
 
     /**
      * {@inheritdoc}
@@ -48,7 +29,7 @@ class IntegerField extends BranaFieldBase implements BranaFieldInterface
      */
     public function getMapLength()
     {
-        return $this->config['length'];
+        return $this->model['length'];
     }
 
 
@@ -57,7 +38,7 @@ class IntegerField extends BranaFieldBase implements BranaFieldInterface
      */
     public function getMapIsNullable()
     {
-        return $this->config['pk'] ? false : $this->config['nullable'];
+        return $this->model['pk'] ? false : $this->model['nullable'];
     }
 
 
@@ -84,7 +65,7 @@ class IntegerField extends BranaFieldBase implements BranaFieldInterface
      */
     public function getMapUseDefault(): bool
     {   
-      return array_key_exists('default', $this->config);
+      return array_key_exists('default', $this->model);
     }
 
 
@@ -93,7 +74,7 @@ class IntegerField extends BranaFieldBase implements BranaFieldInterface
      */
     public function getMapDefault()
     {
-        return (int) $this->config['default'];
+        return (int) $this->model['default'];
     }
 
 
@@ -102,7 +83,7 @@ class IntegerField extends BranaFieldBase implements BranaFieldInterface
      */
     public function getMapIsPk()
     {
-        return (bool) $this->config['pk'];
+        return (bool) $this->model['pk'];
     }
 
 
@@ -116,22 +97,20 @@ class IntegerField extends BranaFieldBase implements BranaFieldInterface
 
 
     /**
-     * Returns additional options to be passed to the storage field.
-     *
-     * @return array An array of options
+     * {@inheritdoc}
      */
-    public function getMapOptions()
-    {
-        return [];
-    }
-
     public function hydrate($value)
     {
         return (integer) $value;
     }
 
+
+    /**
+     * {@inheritdoc}
+     */
     public function dehydrate($value)
     {
         return (integer) $value;
     }
+
 }

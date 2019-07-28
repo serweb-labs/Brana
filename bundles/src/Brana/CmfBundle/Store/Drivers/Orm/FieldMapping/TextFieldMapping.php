@@ -1,39 +1,18 @@
 <?php
 
-namespace Brana\CmfBundle\Store\Drivers\Orm\Field;
+namespace Brana\CmfBundle\Store\Drivers\Orm\FieldMapping;
 
 /**
  * @author Luciano Rodriguez <luciano.rdz@gmail.com>
  */
-class DateField extends BranaFieldBase implements BranaFieldInterface
+class TextFieldMapping extends BranaFieldMappingBase implements BranaFieldMappingInterface
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function __construct(array $config, $name)
-    {
-        $fallback = [
-            'nullable' => true
-        ];
-        $this->config = array_merge($fallback, $config);
-        $this->config['name'] = $name;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getName()
-    {
-        return 'date';
-    }
-
     /**
      * {@inheritdoc}
      */
     public function hydrate($value)
     {
-        $datetime = new \DateTime();
-        return $datetime->createFromFormat('Y-m-d', $value);
+        return $value;
     }
 
 
@@ -41,16 +20,17 @@ class DateField extends BranaFieldBase implements BranaFieldInterface
      * {@inheritdoc}
      */
     public function dehydrate($value)
-    { 
-        return $value->format('Y-m-d');
+    {
+        return $value;
     }
+
 
     /**
      * {@inheritdoc}
      */
     public function getMapTypeName()
     {
-        return 'date';
+        return 'string';
     }
 
 
@@ -67,7 +47,7 @@ class DateField extends BranaFieldBase implements BranaFieldInterface
      */
     public function getMapLength()
     {
-        return null;
+        return $this->model['length'];
     }
 
 
@@ -76,7 +56,7 @@ class DateField extends BranaFieldBase implements BranaFieldInterface
      */
     public function getMapIsNullable()
     {
-        return $this->config['nullable'];
+        return $this->model['nullable'];
     }
 
 
@@ -103,7 +83,7 @@ class DateField extends BranaFieldBase implements BranaFieldInterface
      */
     public function getMapUseDefault(): bool
     {   
-      return array_key_exists('default', $this->config);
+      return array_key_exists('default', $this->model);
     }
 
 
@@ -112,7 +92,7 @@ class DateField extends BranaFieldBase implements BranaFieldInterface
      */
     public function getMapDefault()
     {
-        return $this->config['default'];
+        return (string) $this->model['default'];
     }
 
 
@@ -131,17 +111,6 @@ class DateField extends BranaFieldBase implements BranaFieldInterface
     public function getMapIsUnique()
     {
         return false;
-    }
-
-
-    /**
-     * Returns additional options to be passed to the storage field.
-     *
-     * @return array An array of options
-     */
-    public function getMapOptions()
-    {
-        return [];
     }
 
 }

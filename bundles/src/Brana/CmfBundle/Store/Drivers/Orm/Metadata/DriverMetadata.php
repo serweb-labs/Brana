@@ -1,10 +1,10 @@
 <?php
 
-namespace Brana\CmfBundle\Store\Drivers\Orm\Mapping;
+namespace Brana\CmfBundle\Store\Drivers\Orm\Metadata;
 
 use Doctrine\Common\Persistence\Mapping\ClassMetadata;
 use Brana\CmfBundle\CaseTransformTrait;
-use Brana\CmfBundle\Store\Drivers\Orm\Mapping\ClassMetadata as BranaClassMetadata;
+use Brana\CmfBundle\Store\Drivers\Orm\Metadata\ClassMetadata as BranaClassMetadata;
 use Brana\CmfBundle\Store\Drivers\Orm\NamingStrategy;
 use Brana\CmfBundle\Psr\ContentTypesConfig;
 
@@ -14,7 +14,7 @@ use Brana\CmfBundle\Psr\ContentTypesConfig;
  *
  * @author Luciano Rodriguez <luciano.rdz@gmail.com>
  */
-class MetadataDriver
+class DriverMetadata
 {
     use CaseTransformTrait;
 
@@ -45,15 +45,15 @@ class MetadataDriver
     private function getBranaField($fieldDef, $kField)
     {   
         $map =  [
-            'text' => 'Brana\CmfBundle\Store\Drivers\Orm\Field\TextField',
-            'integer' => 'Brana\CmfBundle\Store\Drivers\Orm\Field\IntegerField',
-            'slug' => 'Brana\CmfBundle\Store\Drivers\Orm\Field\SlugField',
-            'date' => 'Brana\CmfBundle\Store\Drivers\Orm\Field\DateField',
-            'boolean' => 'Brana\CmfBundle\Store\Drivers\Orm\Field\BooleanField',
-            'choice' => 'Brana\CmfBundle\Store\Drivers\Orm\Field\ChoiceField',
-            'relation' => 'Brana\CmfBundle\Store\Drivers\Orm\Field\RelationField',
+            'text' => 'Brana\CmfBundle\Store\Drivers\Orm\FieldMapping\TextFieldMapping',
+            'integer' => 'Brana\CmfBundle\Store\Drivers\Orm\FieldMapping\IntegerFieldMapping',
+            'slug' => 'Brana\CmfBundle\Store\Drivers\Orm\FieldMapping\SlugFieldMapping',
+            'date' => 'Brana\CmfBundle\Store\Drivers\Orm\FieldMapping\DateFieldMapping',
+            'boolean' => 'Brana\CmfBundle\Store\Drivers\Orm\FieldMapping\BooleanFieldMapping',
+            'choice' => 'Brana\CmfBundle\Store\Drivers\Orm\FieldMapping\ChoiceFieldMapping',
+            'relation' => 'Brana\CmfBundle\Store\Drivers\Orm\FieldMapping\RelationFieldMapping',
         ];
-        return new $map[$fieldDef['type']]($fieldDef, $kField);
+        return new $map[$fieldDef->model['type']]($fieldDef, $kField);
     }
 
     public function loadMetadataForContenttype($ctname, $metadata = null)

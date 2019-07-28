@@ -30,10 +30,11 @@ class ContentSerializer // implements BranaSerializerInterface
     {
         $fields = [];
         $ctName = $this->manager->getContentTypeName();
-        foreach ($this->manager->getContentType()['fields'] as $key => $value) {
-            $fieldSerializer = $this->fieldMapping[$value['type']];
+        foreach ($this->manager->getFields() as $key => $fieldModel) {
+            $fieldSerializer = $this->fieldMapping[$fieldModel->getModel()['type']];
             $fields[$key] = [
                 'serializer' => $fieldSerializer,
+                'model' =>  $fieldModel,
                 'required' => false,
                 'read_only' => false,
                 'write_only' => false,
@@ -53,12 +54,14 @@ class ContentSerializer // implements BranaSerializerInterface
         $ctName = $this->manager->getContentTypeName();
         foreach ($keys as $key) {
             $fieldSerializer = null;
-            if (isset($this->manager->getContentType()['fields'][$key])) {
-                $type = $this->manager->getContentType()['fields'][$key]['type'];
+            $fieldModel = $this->manager->getField($key);
+            if (isset($fieldModel)) {
+                $type = $this->manager->getField($key)->getModel()['type'];
                 $fieldSerializer = $this->fieldMapping[$type];
             }
             $fields[$key] = [
                 'serializer' => $fieldSerializer,
+                'model' =>  $fieldModel,
                 'required' => false,
                 'read_only' => false,
                 'write_only' => false,
@@ -81,7 +84,7 @@ class ContentSerializer // implements BranaSerializerInterface
             return array_keys($this->params[$ctName]['fields']);
         }
         else if ($fKeys === 'all') {
-            return array_keys($this->manager->getContentType()['fields']);
+            return array_keys($this->manager->getFields());
         }
         else if (is_string($fKeys) && strpos($fKeys, '::') !== false) {
             return $this->resolveAndCall($fKeys);
@@ -276,7 +279,11 @@ class ContentSerializer // implements BranaSerializerInterface
     // handle error from bad json
     public function getValuesByRequest() : array
     {   
-        return json_decode($this->request->getContent(), true);
+        $json = json_decode($this->request->getContent(), true);
+        if ($json === null) {
+            $json = [];
+        }
+        return $json;
     }
 
 
