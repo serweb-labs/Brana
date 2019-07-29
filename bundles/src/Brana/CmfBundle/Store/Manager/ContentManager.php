@@ -5,6 +5,7 @@ namespace Brana\CmfBundle\Store\Manager;
 use Brana\CmfBundle\Store\Manager\ManagerInterface;
 use Brana\CmfBundle\Store\Entity\BranaEntityInterface as BranaEntity;
 use Brana\CmfBundle\Store\StoreInteractorInterface as StoreInteractor;
+use Brana\CmfBundle\Store\Query\Query;
 
 /**
  * Manager
@@ -32,18 +33,43 @@ class ContentManager implements ManagerInterface
 
     public function get($id)
     {
-        return $this->interactor->get($this->name, $id);
-    }
-
-    public function filter(array $criteria)
-    {
-        return $this->interactor->filter($criteria);
+        $query = Query::qs()
+        ->contentType($this->name)
+        ->find($id);
+        return $this->interactor->executeQuery($query)[0];
     }
 
     public function all()
     {
-        return $this->interactor->all($this->name);
+        $query = Query::qs()
+        ->contentType($this->name);
+        // ->limit(20)
+        // ->offset(12)
+        // ->orderBy('id', 'ASC');
+        return $this->interactor->executeQuery($query);
     }
+
+    public function page()
+    {
+        $query = Query::qs()
+        ->contentType($this->name)
+        ->limit(20);
+
+        return $this->interactor->executeQuery($query);
+    }
+
+    public function filter(Array $criteria)
+    {
+        $query = Query::qs()
+        ->contentType($this->name);
+
+        foreach ($criteria as $key => $value) {
+            $query = $query->where($key, '=', $value);
+        }
+
+        return $this->interactor->executeQuery($query);
+    }
+
 
     public function create(array $data = [])
     {   

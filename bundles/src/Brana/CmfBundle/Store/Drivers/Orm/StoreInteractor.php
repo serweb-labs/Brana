@@ -3,10 +3,11 @@ namespace Brana\CmfBundle\Store\Drivers\Orm;
 
 use Brana\CmfBundle\Store\StoreInteractorInterface;
 use Brana\CmfBundle\Store\Entity\BranaEntityInterface as BranaEntity;
-use Brana\CmfBundle\Store\Query;
+use Brana\CmfBundle\Store\Query\QuerySet;
 use Brana\CmfBundle\Store\QueryPaser;
 use Brana\CmfBundle\Psr\ContentTypesConfig;
 use Brana\CmfBundle\Store\Drivers\OrmDriver;
+use Doctrine\ORM\Query\Expr;
 
 /* execute all queries */
 class StoreInteractor implements StoreInteractorInterface
@@ -25,41 +26,90 @@ class StoreInteractor implements StoreInteractorInterface
     }   
 
 
-    public function executeBranaQuery(Query $qs)
+    public function executeQuery(QuerySet $qs)
     {
-        $query = $qs->toArray();
-        $qb = $this->dbalQuery();
+        $query = $qs->build();
         $contentType = $query['contenttype'];
-        $contentType = $this->contentTypes[$contentType];
-        $fields = array_keys($contentType['fields']);
-        $qb->select($fields)
+        $cols = array_keys($this->schema->createSchema()->getTable($contentType)->getColumns());
+
+        $qb = $this->dbalQuery();
+        
+        $qb->select($cols)
         ->from($contentType);
-        $qp = new QueryPaser($qb);
+
+        $qp = [
+            'query' => $query,
+            'pre-finish' => [],
+            'finish' => [],
+            'result' => [],
+            'paramsIndex' => 1
+        ];
+
         foreach ($query['members'] as $member) {
-            $this->parseBranaQueryMember($qp, $member);
+            $this->parseBranaQueryMember($member, $qb, $qp);
         }
-        $qp->preFinish();
-        $results = $qb->execute();
-        $all = [];
+        foreach ($qp['pre-finish'] as $fn) {
+            $fn();
+        }
+
+        dump($qb->getSQL());
+
+        $results = $qb->execute()->fetchAll();
+
         foreach ($results as $row) {
             $instance = $this->getManager($contentType)->create();
-            $all[] = $this->hydrate($instance, $row);
+            $qp['result'][] = $this->hydrate($instance, $row);
         }
-        $qp->onFinish($all);
-        return $all;
+
+        foreach ($qp['finish'] as $fn) {
+            $fn();
+        }
+
+        return $qp['result'];
     }
 
 
-    private function parseBranaQueryMember($qp, $member)
-    {
-        switch ($member->type) {
-            case 'member':
-                foreach ($member['members'] as $member) {
-                    $this->parseBranaQueryMember($qp, $member);
+    private function parseBranaQueryMember($m, $qb, &$qp)
+    {   
+        switch ($m['type']) {
+            case 'set':
+                foreach ($m['members'] as $nm) {
+                    $this->parseBranaQueryMember($nm, $qb, $qp);
                 }
                 break;
+            case 'where':
+                if ($m['nexo'] === 'and') {
+                    $qb->andWhere(new Expr\Comparison($m['expr'][0], $m['expr'][1], ":" . $m['expr'][0]));
+                }
+                else {
+                    $qb->orWhere(new Expr\Comparison($m['expr'][0], $m['expr'][1], ":" . $m['expr'][0]));
+                }
+                $qb->setParameter($m['expr'][0], $m['expr'][2]);
+                break;
+            case 'find':
+                $metadata = $this->driver->metadata[$qp['query']['contenttype']];
+                $pkField = $metadata->getPk();
+                $pkCol = $pkField['columnName'];
+                $qb->add('where', new Expr\Comparison($pkCol, '=', ':pk'));
+                $qb->setParameter('pk', $m['pk']);
+                break;
+            case 'limit':
+                $qp['pre-finish'][] = function() use ($qb, $m) {
+                    $qb->setMaxResults($m['value']);
+                };
+                break;
+            case 'offset':
+                $qp['pre-finish'][] = function() use ($qb, $m) {
+                    $qb->setFirstResult($m['value']);
+                };
+                break;
+            case 'order-by':
+                $qp['pre-finish'][] = function() use ($qb, $m) {
+                    $qb->orderBy($m['field'], $m['order']);
+                };
+                break;
             default:
-                $this->runQueryDirective($qp, $member->type);
+                // $this->runQueryDirective($qp, $member->type);
                 break;
         }
     }
@@ -111,46 +161,12 @@ class StoreInteractor implements StoreInteractorInterface
         return null;
     }
 
-
-    // TODO: avoid select *
-    public function all(string $contentType)
-    {
-        
-        $qb = $this->dbalQuery();
-        $metadata = $this->driver->metadata[$contentType];
-        $metadataFields = $metadata->getFieldMappings();
-        // columns
-        $cols = array_keys($this->schema->createSchema()->getTable($metadata->tableName)->getColumns());
-        $result = $qb
-            ->select($cols)
-            ->from($metadata->tableName)
-            ->execute()
-            ->fetchAll();
-
-        $all = [];
-        if ($result) {
-            foreach ($result as $row) {
-                $instance = $this->getManager($contentType)->create();
-                $all[] = $this->hydrate($instance, $row);
-            }
-        }
-        return $all;
-    }
-
-
-    public function filter(Query $qs)
-    {
-        return executeBranaQuery($qs);
-    }
-
-
     public function create(BranaEntity $instance)
     {
         $data = $this->dehydrate($instance);
         $contentType = $instance->getContentTypeName();
         $metadata = $this->driver->metadata[$contentType];
         $schema = $this->contentTypes[$contentType];
-        $cols = [];
         $params = [];
         $count = 0;
         $cols = [];

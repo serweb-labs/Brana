@@ -1,12 +1,11 @@
 <?php
 namespace Brana\CmfBundle\Store;
 use Brana\CmfBundle\Store\Entity\BranaEntityInterface as BranaEntity;
+use Brana\CmfBundle\Store\Query\QuerySet;
 
 interface StoreInteractorInterface {
 
-    public function get(string $contenttype, $pk);
-
-    public function all(string $contenttype);
+    public function executeQuery(QuerySet $qs);
 
     public function create(BranaEntity $entity);
 
