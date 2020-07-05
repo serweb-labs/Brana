@@ -86,6 +86,7 @@ class RestContentController extends AbstractController
             $data = $serializer->retrieve($item);
             return new JsonResponse($data);
         }
+        return new JsonResponse(array('errors' => ["internal error"]), 500);
     }
 
 
