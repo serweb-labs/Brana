@@ -53,7 +53,9 @@ class QuerySet {
                 return $where;
             }
         ];
-        dump($this->state);
+        if ($_SERVER['APP_DEBUG']) {
+            dump($this->state);
+        }
         return $this;
     }
 

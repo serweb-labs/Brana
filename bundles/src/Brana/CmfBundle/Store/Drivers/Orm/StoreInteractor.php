@@ -51,9 +51,11 @@ class StoreInteractor implements StoreInteractorInterface
         foreach ($qp['pre-finish'] as $fn) {
             $fn();
         }
-
-        dump($qb->getSQL());
-
+        
+        if ($_SERVER['APP_DEBUG']) {
+            dump($qb->getSQL());
+        }
+        
         $results = $qb->execute()->fetchAll();
 
         foreach ($results as $row) {

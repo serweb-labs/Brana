@@ -9,13 +9,13 @@
         "doctrine/doctrine-migrations-bundle": "^2.0",
         "doctrine/orm": "^2.6",
         "firebase/php-jwt": "^5.0",
-        "symfony/console": "4.2.*",
-        "symfony/dotenv": "4.2.*",
+        "symfony/console": "5.0.*",
+        "symfony/dotenv": "5.0.*",
         "symfony/flex": "^1.1",
-        "symfony/framework-bundle": "4.2.*",
+        "symfony/framework-bundle": "5.0.*",
         "symfony/swiftmailer-bundle": "^3.2",
-        "symfony/twig-bundle": "4.2.*",
-        "symfony/yaml": "4.2.*"
+        "symfony/twig-bundle": "5.0.*",
+        "symfony/yaml": "5.0.*"
     },
     "config": {
         "preferred-install": {
@@ -60,12 +60,12 @@
     "extra": {
         "symfony": {
             "allow-contrib": false,
-            "require": "4.2.*"
+            "require": "5.0.*"
         }
     },
     "require-dev": {
         "symfony/profiler-pack": "^1.0",
-        "symfony/var-dumper": "4.2.*",
-        "symfony/web-server-bundle": "4.2.*"
+        "symfony/var-dumper": "5.0.*",
+        "symfony/web-server-bundle": "4.4.*"
     }
 }
