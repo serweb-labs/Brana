@@ -1,5 +1,6 @@
 things:
     name: things
+    extends: contenttypes
     fields:
         id:
             type: integer
@@ -7,11 +8,11 @@ things:
         username:
             type: text
             nullable: false
-            default: asdasd
+            default: unknown
         name:
             type: text
-        # password:
-        #     type: text
+        password:
+            type: text
         email:
             type: text
         from_date:
@@ -29,5 +30,3 @@ things:
                   value: 1
                 - name: 'contact'
                   value: 2
-    default_status: published
-    searchable: false

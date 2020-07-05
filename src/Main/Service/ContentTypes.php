@@ -26,18 +26,31 @@ class ContentTypes implements ContentTypesConfig
             $dir = __DIR__ . '/../../../config/contenttypes/';
             $files = array_diff(scandir($dir), array('.', '..'));
             $data = [];
+            $abstracts = [];
 
-            // TODO: only accept files .yml
+            // TODO: only accept files .yml/.yaml
             foreach ($files as $file) {
                 $value = Yaml::parseFile($dir . $file);
                 $data = array_merge($data, $value);
             }
             foreach ($data as $ct => $ctV) {
-                $data[$ct]['_fields'] = $data[$ct]['fields'];
-                foreach ($data[$ct]['_fields'] as $k => $val) {
-                    $data[$ct]['fields'][$k] = new $this->fieldClasses[$val['type']]($val, $k);
+                if (array_key_exists('abstract', $data[$ct]) && $data[$ct]['abstract'] === true) {
+                    $abstracts[$data[$ct]['name']] = $data[$ct];
+                    unset($data[$ct]);
                 }
-                unset($data[$ct]['_fields']);
+            }
+            foreach ($data as $ct => $ctV) {
+                if (!array_key_exists('abstract', $data[$ct])) {
+                    if (array_key_exists('extends', $data[$ct])) {
+                        $data[$ct] = $this->merge_ct($abstracts[$data[$ct]['extends']], $data[$ct]);
+                        unset($data[$ct]['abstract']);
+                    }
+                    $data[$ct]['_fields'] = $data[$ct]['fields'];
+                    foreach ($data[$ct]['_fields'] as $k => $val) {
+                        $data[$ct]['fields'][$k] = new $this->fieldClasses[$val['type']]($val, $k);
+                    }
+                    unset($data[$ct]['_fields']);
+                }
             }
             $this->data = $data;
             $this->loaded = true;
@@ -55,8 +68,26 @@ class ContentTypes implements ContentTypesConfig
         // $this->data;
     }
 
+    public function merge_ct (array &$array1, array &$array2)
+    {
+        $merged = $array1;
+
+        foreach ($array2 as $key => &$value)
+        {
+            if (is_array($value) && isset($merged [$key]) && is_array($merged [$key]))
+            {
+                $merged [$key] = $this->merge_ct($merged [$key], $value);
+            } else {
+                $merged [$key] = $value;
+            }
+        }
+
+        return $merged;
+    }
+
     public function __invoke()
     {
         return $this->get();
     }
+
 }

@@ -1,6 +1,6 @@
 users:
     entity: App\User\Entity
-    # manager: /sadasd/sdsd/
+    manager: Brana\CmfBundle\Store\Manager\ContentManager
     name: users
     fields:
         id:

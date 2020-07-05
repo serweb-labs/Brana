@@ -48,7 +48,7 @@ class Store
     }
 
     public function register($contenttype, $entity, $manager)
-    {   
+    {
         $this->{$contenttype} = new $manager(
             $this->contenttypes->get()[$contenttype],
             $entity,

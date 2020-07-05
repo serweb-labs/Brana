@@ -1,0 +1,17 @@
+contenttypes:
+    name: contenttypes
+    abstract: true
+    entity: Brana\CmfBundle\Store\Entity\DynamicEntity
+    manager: Brana\CmfBundle\Store\Manager\ContentManager
+    fields: []
+      last_update_when:
+        type: date
+      last_update_who:
+        type: relation
+        target: users
+        relation_type: one-to-many
+      status:
+        type: choice
+        values: ['published', 'scheduled', 'draft']
+    meta:
+      searchable: true

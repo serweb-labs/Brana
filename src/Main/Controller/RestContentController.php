@@ -66,7 +66,7 @@ class RestContentController extends AbstractController
             $manager = $this->store->$contenttype;
             $objs = [];
             foreach ($manager->all() as $item) {
-                $objs[] =  $serializer->retrieve($item)['data'];
+                $objs[] = $serializer->retrieve($item)['data'];
             }
             return new JsonResponse(array('data' => $objs));
         }
