@@ -1,7 +1,6 @@
 <?php
 
 namespace App\User;
-use Brana\CmfBundle\Store\Entity\BranaEntityInterface;
 use Brana\CmfBundle\Store\Entity\BaseEntity;
 /**
  *
@@ -28,7 +27,7 @@ class Entity extends BaseEntity
 
     public function getPassword()
     { 
-        return "******";
+        return $this->hash;
     }
 
     public function setId($value)

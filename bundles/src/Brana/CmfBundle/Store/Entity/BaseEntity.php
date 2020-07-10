@@ -1,12 +1,12 @@
 <?php
 
 namespace Brana\CmfBundle\Store\Entity;
-use Brana\CmfBundle\Store\Entity\BranaEntityInterface;
+use Brana\CmfBundle\Store\Entity\IBranaEntity;
 
 /**
  *
  */
-abstract class BaseEntity implements BranaEntityInterface
+abstract class BaseEntity implements IBranaEntity
 {
     protected $contentTypeName;
 

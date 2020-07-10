@@ -5,7 +5,7 @@ namespace Brana\CmfBundle\Store\Field;
 /**
  * @author Luciano Rodriguez <luciano.rdz@gmail.com>
  */
-class ChoiceField implements BranaFieldInterface
+class ChoiceField implements IBranaField
 {
     public $internals = [];
 

@@ -5,7 +5,7 @@ namespace Brana\CmfBundle\Store\Field;
 /**
  * @author Luciano Rodriguez <luciano.rdz@gmail.com>
  */
-class PasswordField implements BranaFieldInterface
+class PasswordField implements IBranaField
 {
     public function __construct(array $model, $name)
     {

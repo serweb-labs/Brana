@@ -5,7 +5,7 @@ namespace Brana\CmfBundle\Store\Drivers\Orm;
 /**
  * Handles Object to DB naming adjustments.
  */
-interface NamingStrategyInterface
+interface INamingStrategy
 {
     /**
      * Takes either a global or absolute class name and returns an underscored table name.

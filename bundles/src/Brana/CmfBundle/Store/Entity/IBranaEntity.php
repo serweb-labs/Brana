@@ -5,7 +5,7 @@ namespace Brana\CmfBundle\Store\Entity;
 /**
  *
  */
-interface BranaEntityInterface
+interface IBranaEntity
 {
    public function getContentTypeName() : string;
 

@@ -5,7 +5,7 @@ namespace Brana\CmfBundle\Store\Drivers\Orm\FieldMapping;
 /**
  * @author Luciano Rodriguez <luciano.rdz@gmail.com>
  */
-class IntegerFieldMapping extends BranaFieldMappingBase implements BranaFieldMappingInterface
+class IntegerFieldMapping extends BranaFieldMappingBase implements IBranaFieldMapping
 {
     /**
      * {@inheritdoc}

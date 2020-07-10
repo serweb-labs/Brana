@@ -2,9 +2,9 @@
 
 namespace Brana\CmfBundle\Store\Manager;
 
-use Brana\CmfBundle\Store\Manager\ManagerInterface;
-use Brana\CmfBundle\Store\Entity\BranaEntityInterface as BranaEntity;
-use Brana\CmfBundle\Store\StoreInteractorInterface as StoreInteractor;
+use Brana\CmfBundle\Store\Manager\IManager;
+use Brana\CmfBundle\Store\Entity\IBranaEntity;
+use Brana\CmfBundle\Store\IStoreInteractor;
 use Brana\CmfBundle\Store\Query\Query;
 
 /**
@@ -13,7 +13,7 @@ use Brana\CmfBundle\Store\Query\Query;
  * Default generic manager for all content types
  * @author Luciano Rodriguez <luciano.rdz@gmail.com>
  */
-class ContentManager implements ManagerInterface
+class ContentManager implements IManager
 {
     private $fields;
     public $entityClass;
@@ -24,7 +24,7 @@ class ContentManager implements ManagerInterface
         string $contenttypeName,
         array $fields,
         string $entityClass,
-        StoreInteractor $interactor
+        IStoreInteractor $interactor
     ) {
         $this->contenttypeName = $contenttypeName;
         $this->fields = $fields;
@@ -79,17 +79,17 @@ class ContentManager implements ManagerInterface
         return $instance;
     }
 
-    public function update(BranaEntity $instance)
+    public function update(IBranaEntity $instance)
     {
         return $this->interactor->update($instance);
     }
 
-    public function patch(BranaEntity $instance)
+    public function patch(IBranaEntity $instance)
     {
         return $this->interactor->patch($instance);
     }
 
-    public function save(BranaEntity $instance)
+    public function save(IBranaEntity $instance)
     {
         if ($instance->get('id')) {
             return $this->interactor->update($instance);
@@ -97,12 +97,12 @@ class ContentManager implements ManagerInterface
         return $this->interactor->create($instance);
     }
 
-    public function refresh(BranaEntity $instance)
+    public function refresh(IBranaEntity $instance)
     {
         return $this->interactor->refresh($instance);
     }
 
-    public function remove(BranaEntity $instance)
+    public function remove(IBranaEntity $instance)
     {
         return $this->interactor->remove($instance);
     }

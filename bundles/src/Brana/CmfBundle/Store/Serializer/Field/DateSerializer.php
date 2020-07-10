@@ -2,7 +2,7 @@
 namespace Brana\CmfBundle\Store\Serializer\Field;
 
 
-class DateSerializer // implements BranaSerializerInterface
+class DateSerializer implements IBranaFieldSerializer
 {
 
     public static function getOptions($options)
@@ -14,7 +14,7 @@ class DateSerializer // implements BranaSerializerInterface
     }
 
 
-    public static function toRepresentation($value, array $options = [])
+    public static function toRepresentation($value, array $options)
     {   
         $options = self::getOptions($options);
         if (isset($value)) {
@@ -24,7 +24,7 @@ class DateSerializer // implements BranaSerializerInterface
     }
 
     // TODO: check format, handle exceptions
-    public static function toInternal($value, array $options = [])
+    public static function toInternal($value, array $options)
     {   
         $options = self::getOptions($options);
         $datetime = new \DateTime();

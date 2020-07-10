@@ -4,7 +4,7 @@ namespace Brana\CmfBundle\Store\Drivers\Orm\FieldMapping;
 /**
  * @author Luciano Rodriguez <luciano.rdz@gmail.com>
  */
-class BooleanFieldMapping extends BranaFieldMappingBase implements BranaFieldMappingInterface
+class BooleanFieldMapping extends BranaFieldMappingBase implements IBranaFieldMapping
 {
     /**
      * {@inheritdoc}

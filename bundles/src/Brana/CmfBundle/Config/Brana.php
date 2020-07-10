@@ -4,7 +4,7 @@ namespace Brana\CmfBundle\Config;
 
 use Symfony\Component\Yaml\Yaml;
 
-class Brana // implements ConfigInterface
+class Brana // implements IConfig
 {
     private $data = [];
     private $loaded = false;

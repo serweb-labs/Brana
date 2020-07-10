@@ -6,12 +6,12 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 use Brana\CmfBundle\Psr\ContentTypesConfig;
 use Brana\CmfBundle\Store\Store;
-use Brana\CmfBundle\Psr\BranaKernel as BranaKernelInterface;
+use Brana\CmfBundle\Psr\BranaKernel as IBranaKernel;
 use Brana\CmfBundle\Store\Entity\BaseEntity;
-use Brana\CmfBundle\Store\Entity\BranaEntityInterface;
-use Brana\CmfBundle\Store\Manager\ManagerInterface;
+use Brana\CmfBundle\Store\Entity\IBranaEntity;
+use Brana\CmfBundle\Store\Manager\IManager;
 
-abstract class BranaKernel implements BranaKernelInterface
+abstract class BranaKernel implements IBranaKernel
 {
     public $store;
     public $contenttypes;
@@ -68,7 +68,7 @@ abstract class BranaKernel implements BranaKernelInterface
 
             if (array_key_exists('entity', $ct) && class_exists($ct['entity'])) {
                 $interfaces = class_implements($ct['entity']);
-                if (isset($interfaces[BranaEntityInterface::class])) {
+                if (isset($interfaces[IBranaEntity::class])) {
                     $entityClass = $ct['entity'];
                 }
                 else {
@@ -81,7 +81,7 @@ abstract class BranaKernel implements BranaKernelInterface
 
             if (array_key_exists('manager', $ct) && class_exists($ct['manager'])) {
                 $interfaces = class_implements($ct['manager']);
-                if (isset($interfaces[ManagerInterface::class])) {
+                if (isset($interfaces[IManager::class])) {
                     $managerClass = $ct['manager'];
                 }
                 else {

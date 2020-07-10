@@ -5,7 +5,7 @@ namespace Brana\CmfBundle\Store\Field;
 /**
  * @author Luciano Rodriguez <luciano.rdz@gmail.com>
  */
-class DateField implements BranaFieldInterface
+class DateField implements IBranaField
 {
     /**
      * {@inheritdoc}

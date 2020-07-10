@@ -5,7 +5,7 @@ namespace Brana\CmfBundle\Store\Field;
 /**
  * @author Luciano Rodriguez <luciano.rdz@gmail.com>
  */
-class TextField implements BranaFieldInterface
+class TextField implements IBranaField
 {
     public function __construct(array $model, $name)
     {

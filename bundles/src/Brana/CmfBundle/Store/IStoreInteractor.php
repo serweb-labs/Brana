@@ -1,9 +1,9 @@
 <?php
 namespace Brana\CmfBundle\Store;
-use Brana\CmfBundle\Store\Entity\BranaEntityInterface as BranaEntity;
+use Brana\CmfBundle\Store\Entity\IBranaEntity as BranaEntity;
 use Brana\CmfBundle\Store\Query\QuerySet;
 
-interface StoreInteractorInterface {
+interface IStoreInteractor {
 
     public function executeQuery(QuerySet $qs);
 

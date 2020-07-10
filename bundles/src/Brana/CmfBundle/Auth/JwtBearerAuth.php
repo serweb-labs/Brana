@@ -13,7 +13,7 @@ use Brana\CmfBundle\Store\Store;
  *
  * @author Luciano Rodriguez <luciano.rdz@gmail.com>
  */
-class JwtBearerAuth // implements AuthProviderInterface
+class JwtBearerAuth // implements IAuthProvider
 {   
     public function __construct(string $privateKey, string $publicKey, Store $store)
     {

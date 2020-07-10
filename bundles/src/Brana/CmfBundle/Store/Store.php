@@ -4,7 +4,7 @@ namespace Brana\CmfBundle\Store;
 
 use Brana\CmfBundle\CaseTransformTrait;
 use Brana\CmfBundle\Store\Entity\BranaEntity;
-use Brana\CmfBundle\Store\Manager\ManagerInterface as BranaManager;
+use Brana\CmfBundle\Store\Manager\IManager;
 use Brana\CmfBundle\Store\Manager;
 
 class Store
@@ -18,7 +18,7 @@ class Store
     {   
         return (
             isset($this->{$contenttype}) && 
-            $this->{$contenttype} instanceof BranaManager
+            $this->{$contenttype} instanceof IManager
         );
     }
 

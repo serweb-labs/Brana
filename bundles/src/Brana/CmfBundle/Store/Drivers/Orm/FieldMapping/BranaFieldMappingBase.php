@@ -1,12 +1,12 @@
 <?php
 namespace Brana\CmfBundle\Store\Drivers\Orm\FieldMapping;
 
-use Brana\CmfBundle\Store\Field\BranaFieldInterface;
+use Brana\CmfBundle\Store\Field\IBranaField;
 
 /**
  * @author Luciano Rodriguez <luciano.rdz@gmail.com>
  */
-abstract class BranaFieldMappingBase implements BranaFieldMappingInterface
+abstract class BranaFieldMappingBase implements IBranaFieldMapping
 {
     public $model;
     public $field;
@@ -14,7 +14,7 @@ abstract class BranaFieldMappingBase implements BranaFieldMappingInterface
     /**
      * {@inheritdoc}
      */
-    public function __construct(BranaFieldInterface $fieldModel)
+    public function __construct(IBranaField $fieldModel)
     {
         $this->field = $fieldModel;
         $this->model = $fieldModel->getModel();

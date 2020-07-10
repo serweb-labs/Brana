@@ -2,15 +2,15 @@
 namespace Brana\CmfBundle\Store\Drivers\Orm;
 
 use Brana\CmfBundle\Store\Store;
-use Brana\CmfBundle\Store\StoreInteractorInterface;
-use Brana\CmfBundle\Store\Entity\BranaEntityInterface as BranaEntity;
+use Brana\CmfBundle\Store\IStoreInteractor;
+use Brana\CmfBundle\Store\Entity\IBranaEntity;
 use Brana\CmfBundle\Store\Query\QuerySet;
 use Brana\CmfBundle\Store\QueryPaser;
 use Brana\CmfBundle\Store\Drivers\OrmDriver;
 use Doctrine\ORM\Query\Expr;
 
 /* execute all queries */
-class StoreInteractor implements StoreInteractorInterface
+class StoreInteractor implements IStoreInteractor
 {
     private $driver;
     private $schema;
@@ -164,7 +164,7 @@ class StoreInteractor implements StoreInteractorInterface
         return null;
     }
 
-    public function create(BranaEntity $instance)
+    public function create(IBranaEntity $instance)
     {
         $data = $this->dehydrate($instance);
         $contentType = $instance->getContentTypeName();
@@ -207,7 +207,7 @@ class StoreInteractor implements StoreInteractorInterface
     }
 
     // TODO: handle no modified result
-    public function update(BranaEntity $instance)
+    public function update(IBranaEntity $instance)
     {
         $data = $this->dehydrate($instance);
         $contentType = $instance->getContentTypeName();
@@ -249,7 +249,7 @@ class StoreInteractor implements StoreInteractorInterface
 
 
     // TODO: handle no modified result
-    public function remove(BranaEntity $instance)
+    public function remove(IBranaEntity $instance)
     {
         $data = $this->dehydrate($instance);
         $contentType = $instance->getContentTypeName();
@@ -274,14 +274,14 @@ class StoreInteractor implements StoreInteractorInterface
     }
 
 
-    public function refresh(BranaEntity $instance)
+    public function refresh(IBranaEntity $instance)
     {
         $this->get($instance, $instance->getPk());
         return $instance;
     }
 
 
-    public function dehydrate(BranaEntity $instance)
+    public function dehydrate(IBranaEntity $instance)
     {
         $values = [];
         $contentType = $instance->getContentTypeName();
@@ -298,7 +298,7 @@ class StoreInteractor implements StoreInteractorInterface
     }
 
 
-    public function hydrate(BranaEntity $instance, array $raw)
+    public function hydrate(IBranaEntity $instance, array $raw)
     {
         $contentType = $instance->getContentTypeName();
         $schema = $this->driver->getMetadata()[$contentType]->getFieldMappings();

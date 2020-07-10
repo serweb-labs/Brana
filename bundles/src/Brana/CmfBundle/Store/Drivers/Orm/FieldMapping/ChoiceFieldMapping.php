@@ -5,7 +5,7 @@ namespace Brana\CmfBundle\Store\Drivers\Orm\FieldMapping;
 /**
  * @author Luciano Rodriguez <luciano.rdz@gmail.com>
  */
-class ChoiceFieldMapping extends BranaFieldMappingBase implements BranaFieldMappingInterface
+class ChoiceFieldMapping extends BranaFieldMappingBase implements IBranaFieldMapping
 {
     /**
      * {@inheritdoc}

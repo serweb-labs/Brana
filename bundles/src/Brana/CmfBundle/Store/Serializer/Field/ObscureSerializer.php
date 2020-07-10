@@ -2,16 +2,16 @@
 namespace Brana\CmfBundle\Store\Serializer\Field;
 
 
-class ObscureSerializer // implements BranaSerializerInterface
+class ObscureSerializer implements IBranaFieldSerializer
 {
 
-    public static function toRepresentation($value)
+    public static function toRepresentation($value, array $options)
     {
         return '*******';
     }
 
 
-    public static function toInternal($value)
+    public static function toInternal($value, array $options)
     {
         return $value;
     }

@@ -7,7 +7,7 @@ namespace Brana\CmfBundle\Store\Field;
  *
  * @author Luciano Rodriguez <luciano.rdz@gmail.com>
  */
-interface BranaFieldInterface
+interface IBranaField
 {
     /**
      * Get name.

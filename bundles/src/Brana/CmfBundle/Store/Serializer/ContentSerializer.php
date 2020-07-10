@@ -1,15 +1,15 @@
 <?php
 namespace Brana\CmfBundle\Store\Serializer;
 
-use Brana\CmfBundle\Store\Entity\BranaEntityInterface as BranaEntity;
-use Brana\CmfBundle\Store\Manager\ManagerInterface as BranaManager;
+use Brana\CmfBundle\Store\Entity\IBranaEntity;
+use Brana\CmfBundle\Store\Manager\IManager;
 
-class ContentSerializer // implements BranaSerializerInterface
+class ContentSerializer implements IBranaSerializer
 {
     private $fieldMapping;
     private $params;
 
-    public function __construct(BranaManager $manager, array $context) {
+    public function __construct(IManager $manager, array $context) {
         $this->manager = $manager;
         $this->context = $context;
         $this->params = $context['params'];
@@ -194,7 +194,7 @@ class ContentSerializer // implements BranaSerializerInterface
     }
 
 
-    public function update($instance)
+    public function update(IBranaEntity $instance)
     {
         $fieldKeys = $this->getFieldsKeys();
         $fields = $this->getFields($fieldKeys);
@@ -215,7 +215,7 @@ class ContentSerializer // implements BranaSerializerInterface
     }
 
 
-    public function retrieve($instance)
+    public function retrieve(IBranaEntity $instance)
     {
         $fieldKeys = $this->getFieldsKeys();
         $fields = $this->getFields($fieldKeys);
@@ -224,7 +224,7 @@ class ContentSerializer // implements BranaSerializerInterface
     }
 
 
-    public function serialize($instance, $fields)
+    public function serialize(IBranaEntity $instance, $fields)
     {
         $data = [];
         $errors = [];
@@ -237,7 +237,7 @@ class ContentSerializer // implements BranaSerializerInterface
         return ['data' => $data, 'errors' => $errors];
     }
 
-    public function unserialize($fields, $values, $instance)
+    public function unserialize($fields, $values, IBranaEntity $instance)
     {
         foreach ($fields as $key => $value) {
             if ($value['read_only']) {

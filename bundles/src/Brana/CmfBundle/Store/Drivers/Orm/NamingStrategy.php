@@ -7,7 +7,7 @@ use Brana\CmfBundle\CaseTransformTrait;
 /**
  * Handles Object to DB naming adjustments.
  */
-class NamingStrategy implements NamingStrategyInterface
+class NamingStrategy implements INamingStrategy
 {
     use CaseTransformTrait;
 

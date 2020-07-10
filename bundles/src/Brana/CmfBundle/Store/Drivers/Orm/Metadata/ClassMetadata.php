@@ -3,8 +3,8 @@
 namespace Brana\CmfBundle\Store\Drivers\Orm\Metadata;
 
 use Brana\CmfBundle\Store\Drivers\Orm\NamingStrategy;
-use Brana\CmfBundle\Store\Drivers\Orm\NamingStrategyInterface;
-use Doctrine\Common\Persistence\Mapping\ClassMetadata as ClassMetadataInterface;
+use Brana\CmfBundle\Store\Drivers\Orm\INamingStrategy;
+use Doctrine\Common\Persistence\Mapping\ClassMetadata as IClassMetadata;
 use Doctrine\ORM\Mapping\ClassMetadataInfo;
 
 /**
@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping\ClassMetadataInfo;
  *
  * @author Luciano Rodriguez <luciano.rdz@gmail.com>
  */
-class ClassMetadata extends ClassMetadataInfo implements ClassMetadataInterface
+class ClassMetadata extends ClassMetadataInfo implements IClassMetadata
 {
     /** @var string */
     protected $brananame;
@@ -21,9 +21,9 @@ class ClassMetadata extends ClassMetadataInfo implements ClassMetadataInterface
      * Constructor.
      *
      * @param string                  $className      Fully-qualified class name
-     * @param NamingStrategyInterface $namingStrategy Naming strategy
+     * @param INamingStrategy $namingStrategy Naming strategy
      */
-    public function __construct($className, NamingStrategyInterface $namingStrategy = null)
+    public function __construct($className, INamingStrategy $namingStrategy = null)
     {
         $this->name = $className;
         $this->namingStrategy = $namingStrategy ?: new NamingStrategy();

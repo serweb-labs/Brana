@@ -9,7 +9,7 @@ use Doctrine\DBAL\Types\Type;
  *
  * @author Luciano Rodriguez <luciano.rdz@gmail.com>
  */
-interface BranaFieldMappingInterface
+interface IBranaFieldMapping
 {
     /**
      * Returns the name of the field.

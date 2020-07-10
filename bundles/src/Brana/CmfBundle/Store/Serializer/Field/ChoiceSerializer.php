@@ -2,15 +2,15 @@
 namespace Brana\CmfBundle\Store\Serializer\Field;
 
 
-class ChoiceSerializer // implements BranaSerializerInterface
+class ChoiceSerializer implements IBranaFieldSerializer
 {
 
-    public static function toRepresentation($value, $field)
+    public static function toRepresentation($value, array $options)
     {   
-        return $field['model']->getOptionByValue($value);
+        return $options['model']->getOptionByValue($value);
     }
 
-    public static function toInternal($value)
+    public static function toInternal($value, array $options)
     {
         return $value['value'] ?? null;
     }
