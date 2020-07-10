@@ -3,7 +3,8 @@ contenttypes:
     abstract: true
     entity: Brana\CmfBundle\Store\Entity\DynamicEntity
     manager: Brana\CmfBundle\Store\Manager\ContentManager
-    fields: []
+    engine: Orm
+    fields:
       last_update_when:
         type: date
       last_update_who:

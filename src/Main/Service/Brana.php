@@ -17,10 +17,5 @@ class Brana extends BranaKernel
         // config store
     }
 
-    public function setConnection()
-    {
-        // config drivers params
-    }
-
 
 }

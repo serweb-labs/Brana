@@ -8,9 +8,9 @@ use Brana\CmfBundle\Store\Entity\BranaEntityInterface;
  */
 abstract class BaseEntity implements BranaEntityInterface
 {
-    protected $meta;
+    protected $contentTypeName;
 
-    public function __construct($contentType, $data = [])
+    public function __construct($data = [])
     {   
         foreach ($data as $prop => $value) {
             if (property_exists($this, $prop)) {
@@ -19,12 +19,15 @@ abstract class BaseEntity implements BranaEntityInterface
         }
     }
 
-
     public function getContentTypeName():String
     {   
-        return $this->meta['name'];
+        return $this->contentTypeName;
     }
 
+    public function setContentTypeName($name):void
+    {   
+        $this->contentTypeName = $name;
+    }
 
     public function get($prop)
     {

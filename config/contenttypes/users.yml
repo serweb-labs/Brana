@@ -1,6 +1,7 @@
 users:
     entity: App\User\Entity
     manager: Brana\CmfBundle\Store\Manager\ContentManager
+    engine: Orm
     name: users
     fields:
         id:

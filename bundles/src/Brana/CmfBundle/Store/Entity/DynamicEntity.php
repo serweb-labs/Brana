@@ -8,24 +8,25 @@ use Brana\CmfBundle\Store\Entity\BranaEntityInterface;
  */
 class DynamicEntity implements BranaEntityInterface
 {
-    protected $meta;
+    protected $contentTypeName;
 
-    public function __construct($contentType, $data)
+    public function __construct($data)
     {   
-        $this->meta = $contentType;
-        if (isset($contentType['fields'])) {
-            foreach ($contentType['fields'] as $prop => $value) {
-                if (array_key_exists($prop, $data)) {
-                    $this->set($prop, $data[$prop]);
-                }
-            }
+        foreach ($data as $prop => $value) {
+            $this->set($prop, $data[$prop]);
         }
     }
 
 
     public function getContentTypeName():String
     {   
-        return $this->meta['name'];
+        return $this->contentTypeName;
+    }
+
+
+    public function setContentTypeName($name):void
+    {   
+        $this->contentTypeName = $name;
     }
 
 

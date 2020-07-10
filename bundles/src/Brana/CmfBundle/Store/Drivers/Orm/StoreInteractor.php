@@ -1,28 +1,29 @@
 <?php
 namespace Brana\CmfBundle\Store\Drivers\Orm;
 
+use Brana\CmfBundle\Store\Store;
 use Brana\CmfBundle\Store\StoreInteractorInterface;
 use Brana\CmfBundle\Store\Entity\BranaEntityInterface as BranaEntity;
 use Brana\CmfBundle\Store\Query\QuerySet;
 use Brana\CmfBundle\Store\QueryPaser;
-use Brana\CmfBundle\Psr\ContentTypesConfig;
 use Brana\CmfBundle\Store\Drivers\OrmDriver;
 use Doctrine\ORM\Query\Expr;
 
 /* execute all queries */
 class StoreInteractor implements StoreInteractorInterface
 {
-    private $contentTypes;
     private $driver;
+    private $schema;
+    private $store;
 
     public function __construct(
-        ContentTypesConfig $contentTypes,
         OrmDriver $driver,
-        SchemaProvider $schema
+        SchemaProvider $schema,
+        Store $store
     ) {
-        $this->contentTypes = $contentTypes->get();
         $this->driver = $driver;
         $this->schema = $schema;
+        $this->store = $store;
     }   
 
 
@@ -89,7 +90,7 @@ class StoreInteractor implements StoreInteractorInterface
                 $qb->setParameter($m['expr'][0], $m['expr'][2]);
                 break;
             case 'find':
-                $metadata = $this->driver->metadata[$qp['query']['contenttype']];
+                $metadata = $this->driver->getMetadata()[$qp['query']['contenttype']];
                 $pkField = $metadata->getPk();
                 $pkCol = $pkField['columnName'];
                 $qb->add('where', new Expr\Comparison($pkCol, '=', ':pk'));
@@ -125,7 +126,7 @@ class StoreInteractor implements StoreInteractorInterface
 
     private function getManager($contentType)
     {
-        return$this->driver->store->getManager($contentType);
+        return $this->store->getManager($contentType);
     }
 
 
@@ -139,7 +140,7 @@ class StoreInteractor implements StoreInteractorInterface
     public function get(string $contentType, $id)
     {
         $qb = $this->dbalQuery();
-        $metadata = $this->driver->metadata[$contentType];
+        $metadata = $this->driver->getMetadata()[$contentType];
         $metadataFields = $metadata->getFieldMappings();
         $instance = $this->getManager($contentType)->create();
         $pkField = $metadata->getPk();
@@ -167,13 +168,15 @@ class StoreInteractor implements StoreInteractorInterface
     {
         $data = $this->dehydrate($instance);
         $contentType = $instance->getContentTypeName();
-        $metadata = $this->driver->metadata[$contentType];
-        $schema = $this->contentTypes[$contentType];
+        $metadata = $this->driver->getMetadata()[$contentType];
+        $schema = $metadata->getFieldMappings();
+
         $params = [];
         $count = 0;
         $cols = [];
 
-        foreach ($schema['fields'] as $key => $value) {
+        foreach ($schema as $field) {
+            $key = $field['fieldName'];
             if (isset($data[$key])) {
                 $cols[$key] = '?';
                 $params[$key] = [
@@ -208,8 +211,8 @@ class StoreInteractor implements StoreInteractorInterface
     {
         $data = $this->dehydrate($instance);
         $contentType = $instance->getContentTypeName();
-        $metadata = $this->driver->metadata[$contentType];
-        $schema = $this->contentTypes[$contentType];
+        $metadata = $this->driver->getMetadata()[$contentType];
+        $schema = $metadata->getFieldMappings();
         $cols = [];
         $params = [];
         $count = 0;
@@ -218,7 +221,8 @@ class StoreInteractor implements StoreInteractorInterface
         $qb = $this->dbalQuery()
         ->update($contentType); // TODO set real alias
 
-        foreach ($schema['fields'] as $key => $value) {
+        foreach ($schema as $field) {
+            $key = $field['fieldName'];
             if (isset($data[$key]) && $key !== $pkField) {
                 $qb->set($key, '?');
                 $params[$key] = [
@@ -249,8 +253,7 @@ class StoreInteractor implements StoreInteractorInterface
     {
         $data = $this->dehydrate($instance);
         $contentType = $instance->getContentTypeName();
-        $metadata = $this->driver->metadata[$contentType];
-        $schema = $this->contentTypes[$contentType];
+        $metadata = $this->driver->getMetadata()[$contentType];
         $cols = [];
         $params = [];
         $count = 0;
@@ -282,7 +285,7 @@ class StoreInteractor implements StoreInteractorInterface
     {
         $values = [];
         $contentType = $instance->getContentTypeName();
-        $schema = $this->driver->metadata[$contentType]->getFieldMappings();
+        $schema = $this->driver->getMetadata()[$contentType]->getFieldMappings();
         foreach ($schema as $val) {
             $col = $val['columnName'];
             $prop = $val['fieldName'];
@@ -298,7 +301,7 @@ class StoreInteractor implements StoreInteractorInterface
     public function hydrate(BranaEntity $instance, array $raw)
     {
         $contentType = $instance->getContentTypeName();
-        $schema = $this->driver->metadata[$contentType]->getFieldMappings();
+        $schema = $this->driver->getMetadata()[$contentType]->getFieldMappings();
         foreach ($schema as $val) {
             if (isset($raw[$val['columnName']])) {
                 $field = $val['_fieldInstance'];

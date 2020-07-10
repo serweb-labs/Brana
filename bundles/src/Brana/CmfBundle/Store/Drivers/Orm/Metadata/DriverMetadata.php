@@ -6,8 +6,6 @@ use Doctrine\Common\Persistence\Mapping\ClassMetadata;
 use Brana\CmfBundle\CaseTransformTrait;
 use Brana\CmfBundle\Store\Drivers\Orm\Metadata\ClassMetadata as BranaClassMetadata;
 use Brana\CmfBundle\Store\Drivers\Orm\NamingStrategy;
-use Brana\CmfBundle\Psr\ContentTypesConfig;
-
 
 /**
  * Brana Metadata Driver
@@ -34,10 +32,8 @@ class DriverMetadata
      * @param NamingStrategy          $namingStrategy
      */
     public function __construct(
-        ContentTypesConfig $contenttypes,
         NamingStrategy $namingStrategy = null
     ) {
-        $this->contenttypes = $contenttypes->get();
         $this->namingStrategy = $namingStrategy;
     }
 
@@ -56,9 +52,9 @@ class DriverMetadata
         return new $map[$fieldDef->model['type']]($fieldDef, $kField);
     }
 
-    public function loadMetadataForContenttype($ctname, $metadata = null)
-    {
-        $ct = $this->contenttypes[$ctname];
+    public function loadMetadataForContenttype($ct, $metadata = null)
+    {   
+        $ctname = $ct['name'];
 
         if ($metadata === null) {            
             $metadata = new BranaClassMetadata($ctname, $this->namingStrategy);

@@ -20,8 +20,8 @@ final class SchemaProvider implements SchemaProviderInterface
 
     public function createSchema(): Schema
     {
-        foreach ($this->driver->store->getContentTypes() as $key) {
-            $this->loadSchemaFromMetadata($this->schema, $this->driver->metadata[$key]);
+        foreach ($this->driver->getMetadata() as $ctMeta) {
+            $this->loadSchemaFromMetadata($this->schema, $ctMeta);
         }
         return $this->schema;
     }

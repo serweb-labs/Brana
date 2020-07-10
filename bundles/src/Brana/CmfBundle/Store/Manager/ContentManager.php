@@ -15,26 +15,27 @@ use Brana\CmfBundle\Store\Query\Query;
  */
 class ContentManager implements ManagerInterface
 {
-    public $contentType;
+    private $fields;
     public $entityClass;
     protected $interactor;
-    protected $name;
+    protected $contenttypeName;
 
     public function __construct(
-        array $contentType,
+        string $contenttypeName,
+        array $fields,
         string $entityClass,
         StoreInteractor $interactor
     ) {
-        $this->contentType = $contentType;
+        $this->contenttypeName = $contenttypeName;
+        $this->fields = $fields;
         $this->entityClass = $entityClass;
         $this->interactor = $interactor;
-        $this->name = $this->getContentTypeName();
     }
 
     public function get($id)
     {
         $query = Query::qs()
-        ->contentType($this->name)
+        ->contentType($this->contenttypeName)
         ->find($id);
         return $this->interactor->executeQuery($query)[0];
     }
@@ -42,7 +43,7 @@ class ContentManager implements ManagerInterface
     public function all()
     {
         $query = Query::qs()
-        ->contentType($this->name);
+        ->contentType($this->contenttypeName);
         // ->limit(20)
         // ->offset(12)
         // ->orderBy('id', 'ASC');
@@ -52,7 +53,7 @@ class ContentManager implements ManagerInterface
     public function page()
     {
         $query = Query::qs()
-        ->contentType($this->name)
+        ->contentType($this->contenttypeName)
         ->limit(20);
 
         return $this->interactor->executeQuery($query);
@@ -61,7 +62,7 @@ class ContentManager implements ManagerInterface
     public function filter(Array $criteria)
     {
         $query = Query::qs()
-        ->contentType($this->name);
+        ->contentType($this->contenttypeName);
 
         foreach ($criteria as $key => $value) {
             $query = $query->where($key, '=', $value);
@@ -73,8 +74,9 @@ class ContentManager implements ManagerInterface
 
     public function create(array $data = [])
     {   
-        // dump($this->entityClass);
-        return new $this->entityClass($this->contentType, $data);
+        $instance = new $this->entityClass($data);
+        $instance->setContentTypeName($this->contenttypeName);
+        return $instance;
     }
 
     public function update(BranaEntity $instance)
@@ -110,23 +112,18 @@ class ContentManager implements ManagerInterface
         return $this->entityClass;
     }
 
-    public function getContentType()
-    {
-        return $this->contentType;
-    }
-
     public function getField($name)
     {
-        return $this->contentType['fields'][$name];
+        return $this->fields[$name];
     }
 
     public function getFields()
     {
-        return $this->contentType['fields'];
+        return $this->fields;
     }
 
     public function getContentTypeName()
     {
-        return $this->contentType['name'];
+        return $this->contenttypeName;
     }
 }

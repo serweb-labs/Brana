@@ -8,9 +8,7 @@ use Brana\CmfBundle\Store\Entity\BaseEntity;
  */
 class Entity extends BaseEntity
 {
-    protected $meta = array(
-        'name' => 'users'
-    );
+    protected $contentTypeName = 'users';
 
     private $id;
     private $hash;
