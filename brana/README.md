@@ -1,14 +1,15 @@
 # Brana Headless CMS
 
-Brana is a headless content manager framework write in moderm PHP (  Symfony 5!).
+Brana is a headless content manager framework write in moderm PHP (Hello  Symfony 4!).
 
 Currently in the design phase, but now you can take a look at the API.
+
 
 Create your API or webserservice quickly without losing flexibility.
 
 
 # Store layer API
-The model is defines in yaml files.
+Los campos y sus tipos (es decir el esquema de datos) se definen en cualquier archivo yaml en /config/contenttypes/, de hecho normalmente usted solo tendra que agregar su esquema en /config/contenttypes/app.yml y Brana se encargara del trabajo pesado.
 
 ```yaml
 # /config/contenttypes/app.yml
@@ -78,6 +79,17 @@ Una vez que usted difinio su esquema en el archivo yaml, Brana le asignará bajo
 
 $store->setEntity('page', /App/Store/Entity/PageEntity::class);
 $store->setManager('page', /App/Store/Manager/PageManager::class);
+
+```
+
+## Equivalent to
+```php
+// /app/Store.php
+
+$store->set('page', [
+    'entity'=>/App/Store/Entity/PageEntity::class,
+    'manager'=>/App/Store/Manager/PageManager::class,
+]);
 
 ```
 

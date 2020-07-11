@@ -40,4 +40,9 @@ rest_destroy:
   controller: App\Main\Controller\RestContentController::destroy
   methods:  [DELETE]
 
+# NOTIFICATIONS
+
+notification:
+  path: /notification
+  controller: App\Main\Controller\NotificationController
 

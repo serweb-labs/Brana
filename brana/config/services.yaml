@@ -12,6 +12,10 @@ services:
     App\Main\Controller\:
         resource: '../src/Main/Controller/*'
         tags: ['controller.service_arguments']
+
+    App\MessageHandler\:
+        resource: '../src/MessageHandler/*'
+        tags: ['messenger.message_handler']
     
     Brana\CmfBundle\Psr\ContentTypesConfig: '@App\Main\Service\ContentTypes'
     Brana\CmfBundle\Psr\BranaKernel: '@App\Main\Service\Brana'

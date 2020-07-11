@@ -1,0 +1,89 @@
+version: '3.1'
+
+services:
+
+  brana:
+    build:
+      context: .
+      dockerfile: Dockerfile-brana
+    environment:
+      MESSENGER_TRANSPORT_DSN: amqp://guest:guest@mq:5672/%2f/messages
+
+      APP_ENV: dev
+      APP_SECRET: <<placeholder>>
+      MAILER_URL: null://localhost
+      DATABASE_URL: mysql://root:hackme@db:3306/brana
+
+      APP_PRIVATE_KEY: "-----BEGIN PUBLIC KEY-----
+      <<placeholder>>
+      -----END PUBLIC KEY-----"
+
+      APP_PUBLIC_KEY: "-----BEGIN PRIVATE KEY-----
+      <<placeholder>>
+      -----END PRIVATE KEY-----"
+
+    volumes:
+      - ./brana/:/var/www/brana/
+    networks:
+      - overlay
+      - db
+
+  brana-consume:
+    build:
+      context: .
+      dockerfile: Dockerfile-brana-consume
+    environment:
+      MESSENGER_TRANSPORT_DSN: amqp://guest:guest@mq:5672/%2f/messages
+    volumes:
+      - ./brana/:/var/www/brana/
+    networks:
+      - overlay
+
+  proxy:
+    build:
+      context: .
+      dockerfile: Dockerfile-proxy
+    volumes:
+      - ./brana/:/var/www/brana/
+    ports:
+      - 80:80
+      - 443:443
+    networks:
+      - overlay
+
+  mq:
+    build: 
+      context: .
+      dockerfile: Dockerfile-mq
+    volumes:
+      - mq:/var/www/brana/
+    ports:
+      - 15672:15672
+    networks:
+      - overlay
+
+  db:
+    image: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: hackme
+    ports:
+      - 3306:3306
+    networks:
+      - db
+  
+  dbadmin:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+    networks:
+      - db
+
+volumes:
+  mq:
+
+networks:
+  overlay:
+  db:
